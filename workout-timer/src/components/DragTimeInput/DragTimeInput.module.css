@@ -1,0 +1,185 @@
+/* DragTimeInput Component Styles */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.inputGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-xs);
+  cursor: ns-resize;
+  user-select: none;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.inputGroup:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-bg-tertiary);
+}
+
+.inputGroup.dragging {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: scale(1.02);
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input {
+  width: 60px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  cursor: text;
+}
+
+.input:focus {
+  outline: none;
+  background-color: var(--color-bg-primary);
+  border-radius: var(--border-radius-sm);
+}
+
+.input:disabled {
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+}
+
+.dragHint {
+  position: absolute;
+  right: -20px;
+  font-size: 12px;
+  opacity: 0.6;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.inputGroup:hover .dragHint {
+  opacity: 1;
+}
+
+.inputGroup.dragging .dragHint {
+  opacity: 0;
+}
+
+.button {
+  min-width: var(--touch-target-min);
+  height: var(--touch-target-min);
+  flex-shrink: 0;
+}
+
+/* Remove number input arrows */
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Drag feedback animations */
+@keyframes dragPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.inputGroup.dragging {
+  animation: dragPulse 0.3s ease-in-out;
+}
+
+/* Disabled state */
+.inputGroup:has(.input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.inputGroup:has(.input:disabled):hover {
+  border-color: var(--color-border);
+  background-color: var(--color-bg-secondary);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .input {
+    width: 50px;
+    font-size: var(--font-size-sm);
+  }
+  
+  .dragHint {
+    right: -16px;
+    font-size: 10px;
+  }
+  
+  .inputGroup {
+    padding: var(--spacing-sm);
+  }
+}
+
+/* 터치 디바이스 최적화 */
+@media (hover: none) and (pointer: coarse) {
+  .inputGroup {
+    cursor: default;
+    min-height: var(--touch-target-min);
+  }
+  
+  .dragHint {
+    opacity: 1;
+  }
+  
+  .button {
+    min-width: 48px;
+    height: 48px;
+  }
+}
+
+/* 접근성 - 고대비 모드 */
+@media (prefers-contrast: high) {
+  .inputGroup {
+    border-width: 2px;
+  }
+  
+  .inputGroup:hover,
+  .inputGroup.dragging {
+    border-width: 3px;
+  }
+}
+
+/* 애니메이션 감소 설정 */
+@media (prefers-reduced-motion: reduce) {
+  .inputGroup,
+  .dragHint {
+    transition: none;
+  }
+  
+  .inputGroup.dragging {
+    animation: none;
+    transform: none;
+  }
+}

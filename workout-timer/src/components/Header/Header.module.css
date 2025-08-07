@@ -1,0 +1,211 @@
+/* Header Component CSS Module */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-dropdown);
+}
+
+/* Left section - Template button */
+.leftSection {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  min-width: 80px;
+}
+
+.templateButton {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--border-radius-md);
+  transition: all var(--transition-fast);
+}
+
+.templateButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Center section - Title */
+.centerSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Right section - Settings button */
+.rightSection {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+  min-width: 80px;
+  gap: var(--spacing-xs);
+}
+
+.helpButton,
+.settingsButton {
+  font-size: var(--font-size-lg);
+  border-radius: var(--border-radius-full);
+  width: var(--touch-target-min);
+  height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.helpButton {
+  font-weight: var(--font-weight-bold);
+  font-family: serif;
+}
+
+.helpButton:hover:not(:disabled) {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-md);
+}
+
+.settingsButton:hover:not(:disabled) {
+  transform: rotate(90deg);
+  box-shadow: var(--shadow-md);
+}
+
+/* Focus styles for accessibility */
+.templateButton:focus-visible,
+.helpButton:focus-visible,
+.settingsButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Dark theme support */
+[data-theme="dark"] .header {
+  background-color: var(--color-bg-primary);
+  border-bottom-color: var(--color-border);
+}
+
+[data-theme="dark"] .title {
+  color: var(--color-text-primary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+  
+  .title {
+    font-size: var(--font-size-lg);
+  }
+  
+  .leftSection,
+  .rightSection {
+    min-width: 60px;
+  }
+  
+  .templateButton {
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  
+  .helpButton,
+  .settingsButton {
+    font-size: var(--font-size-md);
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: var(--spacing-sm);
+  }
+  
+  .title {
+    font-size: var(--font-size-md);
+  }
+  
+  .leftSection,
+  .rightSection {
+    min-width: 50px;
+  }
+  
+  .templateButton {
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-xs);
+    min-width: 50px;
+  }
+  
+  .helpButton,
+  .settingsButton {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .header {
+    border-bottom-width: 2px;
+  }
+  
+  .templateButton,
+  .helpButton,
+  .settingsButton {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .templateButton,
+  .helpButton,
+  .settingsButton {
+    transition: none;
+  }
+  
+  .templateButton:hover:not(:disabled),
+  .helpButton:hover:not(:disabled),
+  .settingsButton:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .header {
+    box-shadow: none;
+    border-bottom: 1px solid #000;
+    background-color: transparent;
+  }
+  
+  .templateButton,
+  .helpButton,
+  .settingsButton {
+    display: none;
+  }
+}

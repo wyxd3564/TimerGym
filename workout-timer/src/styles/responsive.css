@@ -1,0 +1,284 @@
+/* Responsive Design Utilities */
+
+/* Mobile-first approach with progressive enhancement */
+
+/* Base styles (mobile first) */
+.responsive-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: var(--spacing-sm);
+}
+
+/* Touch-friendly interactive elements */
+.touch-target {
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+  padding: var(--spacing-sm);
+  touch-action: manipulation;
+}
+
+/* Responsive text scaling */
+.responsive-text {
+  font-size: clamp(var(--font-size-sm), 4vw, var(--font-size-lg));
+}
+
+.responsive-display-text {
+  font-size: clamp(1.5rem, 8vw, var(--font-size-display));
+}
+
+/* Responsive spacing */
+.responsive-gap {
+  gap: clamp(var(--spacing-sm), 3vw, var(--spacing-lg));
+}
+
+.responsive-padding {
+  padding: clamp(var(--spacing-sm), 3vw, var(--spacing-lg));
+}
+
+/* Responsive grid layouts */
+.responsive-grid {
+  display: grid;
+  gap: var(--spacing-md);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.responsive-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tablet styles */
+@media (min-width: 768px) {
+  .responsive-container {
+    padding: var(--spacing-md);
+  }
+  
+  .responsive-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .responsive-container {
+    padding: var(--spacing-lg);
+  }
+  
+  .responsive-grid {
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  }
+}
+
+/* Orientation-specific styles */
+@media (orientation: portrait) {
+  .portrait-only {
+    display: block;
+  }
+  
+  .landscape-only {
+    display: none;
+  }
+  
+  .portrait-stack {
+    flex-direction: column;
+  }
+}
+
+@media (orientation: landscape) {
+  .portrait-only {
+    display: none;
+  }
+  
+  .landscape-only {
+    display: block;
+  }
+  
+  .landscape-row {
+    flex-direction: row;
+  }
+}
+
+/* Landscape mobile optimizations */
+@media (orientation: landscape) and (max-height: 600px) {
+  .responsive-container {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  
+  .landscape-compact {
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs);
+  }
+  
+  .landscape-hide {
+    display: none;
+  }
+}
+
+/* Device-specific optimizations */
+
+/* iPhone SE and similar small screens */
+@media (max-width: 375px) and (max-height: 667px) {
+  .responsive-container {
+    padding: var(--spacing-xs);
+  }
+  
+  .small-screen-compact {
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+  }
+}
+
+/* Large phones (iPhone Plus, etc.) */
+@media (min-width: 414px) and (max-width: 767px) {
+  .large-phone-optimize {
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+  }
+}
+
+/* Tablet portrait */
+@media (min-width: 768px) and (max-width: 1023px) and (orientation: portrait) {
+  .tablet-portrait {
+    max-width: 600px;
+    padding: var(--spacing-lg);
+  }
+}
+
+/* Tablet landscape */
+@media (min-width: 768px) and (max-width: 1023px) and (orientation: landscape) {
+  .tablet-landscape {
+    max-width: 800px;
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Increase spacing for touch devices */
+  .touch-spacing {
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+  }
+  
+  /* Larger touch targets */
+  .touch-enhanced {
+    min-height: 48px;
+    min-width: 48px;
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+  
+  /* Remove hover effects */
+  .no-touch-hover:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* Mouse/trackpad device optimizations */
+@media (hover: hover) and (pointer: fine) {
+  .hover-enabled:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-fast);
+  }
+  
+  .pointer-fine {
+    cursor: pointer;
+  }
+}
+
+/* High DPI display optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .high-dpi-border {
+    border-width: 0.5px;
+  }
+  
+  .high-dpi-shadow {
+    box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Accessibility enhancements */
+
+/* Large text preference */
+@media (prefers-reduced-motion: reduce) {
+  .respect-motion-preference {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* High contrast preference */
+@media (prefers-contrast: high) {
+  .high-contrast-border {
+    border: 2px solid currentColor;
+  }
+  
+  .high-contrast-shadow {
+    box-shadow: 0 0 0 2px currentColor;
+  }
+}
+
+/* Reduced transparency preference */
+@media (prefers-reduced-transparency: reduce) {
+  .respect-transparency-preference {
+    background-color: var(--color-bg-primary) !important;
+    backdrop-filter: none !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .print-hide {
+    display: none !important;
+  }
+  
+  .print-show {
+    display: block !important;
+  }
+  
+  .responsive-container {
+    max-width: none;
+    padding: 0;
+  }
+}
+
+/* Safe area insets for devices with notches */
+@supports (padding: max(0px)) {
+  .safe-area-inset {
+    padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+    padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+    padding-top: max(var(--spacing-md), env(safe-area-inset-top));
+    padding-bottom: max(var(--spacing-md), env(safe-area-inset-bottom));
+  }
+  
+  .safe-area-inset-horizontal {
+    padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+    padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+  }
+}
+
+/* Container queries (when supported) */
+@supports (container-type: inline-size) {
+  .responsive-container {
+    container-type: inline-size;
+  }
+  
+  @container (max-width: 300px) {
+    .container-small {
+      font-size: var(--font-size-sm);
+      gap: var(--spacing-xs);
+    }
+  }
+  
+  @container (min-width: 400px) {
+    .container-large {
+      font-size: var(--font-size-lg);
+      gap: var(--spacing-lg);
+    }
+  }
+}

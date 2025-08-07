@@ -1,0 +1,54 @@
+/* TimerControls Component CSS Module */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg);
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* 타이머 컨트롤 버튼들 */
+.timerControls {
+  display: flex;
+  gap: var(--spacing-md);
+  width: 100%;
+  justify-content: center;
+}
+
+.controlButton {
+  flex: 1;
+  max-width: 140px;
+  font-weight: var(--font-weight-bold);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+  .container {
+    gap: var(--spacing-md);
+  }
+  
+  .timerControls {
+    gap: var(--spacing-sm);
+  }
+  
+  .controlButton {
+    max-width: 120px;
+    font-size: var(--font-size-md);
+  }
+}
+
+/* 접근성 개선 */
+.repetitionButton:focus-visible,
+.controlButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* 버튼 상태별 스타일 */
+.controlButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+

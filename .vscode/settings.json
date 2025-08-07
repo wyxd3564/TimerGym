@@ -1,0 +1,8 @@
+{
+    "kiroAgent.trustedCommands": [
+        "npm *",
+        "npx *",
+        "node *",
+        "npm run build 2>&1 | Select-String -Pattern \"PWA|manifest|service\""
+    ]
+}

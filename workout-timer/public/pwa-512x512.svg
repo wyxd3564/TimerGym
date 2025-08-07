@@ -1,0 +1,22 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="#2563eb"/>
+  
+  <!-- Timer circle background -->
+  <circle cx="256" cy="256" r="160" fill="none" stroke="#ffffff" stroke-width="20" opacity="0.3"/>
+  
+  <!-- Timer progress arc -->
+  <circle cx="256" cy="256" r="160" fill="none" stroke="#ffffff" stroke-width="20" 
+          stroke-dasharray="1005" stroke-dashoffset="251" 
+          stroke-linecap="round" 
+          transform="rotate(-90 256 256)"/>
+  
+  <!-- Center text -->
+  <text x="256" y="230" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="64" font-weight="bold">운동</text>
+  <text x="256" y="300" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="52">타이머</text>
+  
+  <!-- Play button icon -->
+  <polygon points="210,350 210,390 250,370" fill="#ffffff"/>
+  <rect x="260" y="350" width="12" height="40" fill="#ffffff"/>
+  <rect x="280" y="350" width="12" height="40" fill="#ffffff"/>
+</svg>

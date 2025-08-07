@@ -1,0 +1,259 @@
+/* App Component CSS Module */
+.app {
+  min-height: 100vh;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-md);
+  gap: var(--spacing-lg);
+}
+
+.timerSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  min-height: 60vh;
+}
+
+.controlsSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
+}
+
+/* Loading State */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top: 3px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: var(--spacing-md);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error State */
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--spacing-lg);
+  text-align: center;
+  gap: var(--spacing-md);
+}
+
+.errorIcon {
+  font-size: 3rem;
+  color: var(--color-danger);
+  margin-bottom: var(--spacing-md);
+}
+
+.errorTitle {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.errorMessage {
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
+  margin: 0;
+  max-width: 300px;
+}
+
+.errorActions {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-md);
+  }
+  
+  .timerSection {
+    gap: var(--spacing-sm);
+    min-height: 50vh;
+  }
+  
+  .controlsSection {
+    gap: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-md);
+  }
+  
+  .timerSection {
+    gap: var(--spacing-md);
+    min-height: 45vh;
+  }
+  
+  .controlsSection {
+    gap: var(--spacing-sm);
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (orientation: landscape) and (max-height: 600px) {
+  .timerSection {
+    min-height: 35vh;
+    gap: var(--spacing-sm);
+  }
+  
+  .main {
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+  }
+  
+  .controlsSection {
+    gap: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 360px) {
+  .main {
+    padding: var(--spacing-xs);
+    gap: var(--spacing-sm);
+  }
+  
+  .timerSection {
+    gap: var(--spacing-sm);
+    min-height: 45vh;
+  }
+}
+
+/* Large screens */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 500px;
+  }
+  
+  .main {
+    padding: var(--spacing-xl);
+    gap: var(--spacing-xxl);
+  }
+  
+  .timerSection {
+    gap: var(--spacing-xxl);
+    min-height: 65vh;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .controlsSection {
+    gap: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+  }
+}
+
+/* Safe area support for devices with notches */
+@supports (padding: max(0px)) {
+  .container {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+  
+  .main {
+    padding-bottom: max(var(--spacing-lg), env(safe-area-inset-bottom));
+  }
+}
+
+/* Dark theme specific adjustments */
+[data-theme="dark"] .app {
+  background-color: var(--color-bg-primary);
+}
+
+[data-theme="dark"] .loadingSpinner {
+  border-color: var(--color-border);
+  border-top-color: var(--color-primary);
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .app {
+    border: 2px solid var(--color-text-primary);
+  }
+  
+  .loadingSpinner {
+    border-width: 4px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .loadingSpinner {
+    animation: none;
+    border-top-color: var(--color-primary);
+  }
+  
+  .app {
+    transition: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .app {
+    background-color: white;
+    color: black;
+  }
+  
+  .loading,
+  .error {
+    display: none;
+  }
+  
+  .controlsSection {
+    display: none;
+  }
+}

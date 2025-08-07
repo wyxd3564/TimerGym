@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Auto Quit Terminal",
+  "description": "Automatically presses 'q' key when terminal displays 'press h to show help, press q to quit' message",
+  "version": "1",
+  "when": {
+    "type": "userTriggered",
+    "patterns": [
+      "**/*"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "When you detect terminal output containing \"press h to show help, press q to quit\", automatically send the 'q' key input to quit the terminal prompt."
+  }
+}

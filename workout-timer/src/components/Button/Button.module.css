@@ -1,0 +1,254 @@
+/* Button Component CSS Module */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--button-height);
+  min-width: var(--button-min-width);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+  touch-action: manipulation;
+  
+  /* Ensure minimum touch target size for accessibility */
+  min-height: var(--touch-target-min);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Button Variants */
+.primary {
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+}
+
+.primary:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+}
+
+.secondary {
+  background-color: var(--color-secondary);
+  color: var(--color-text-light);
+}
+
+.secondary:hover:not(:disabled) {
+  background-color: var(--color-border-dark);
+}
+
+.success {
+  background-color: var(--color-success);
+  color: var(--color-text-light);
+}
+
+.warning {
+  background-color: var(--color-warning);
+  color: var(--color-text-primary);
+}
+
+.danger {
+  background-color: var(--color-danger);
+  color: var(--color-text-light);
+}
+
+/* Button Sizes */
+.small {
+  min-height: 36px;
+  min-width: 80px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+}
+
+.large {
+  min-height: 56px;
+  min-width: 140px;
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-lg);
+}
+
+/* Outline variant */
+.outline {
+  background-color: transparent;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+.outline:hover:not(:disabled) {
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+}
+
+/* Icon button */
+.iconButton {
+  min-width: var(--touch-target-min);
+  width: var(--touch-target-min);
+  height: var(--touch-target-min);
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-full);
+}
+
+/* Focus styles */
+.button:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 1px var(--color-bg-primary);
+}
+
+/* Enhanced focus for different variants */
+.primary:focus-visible {
+  outline-color: var(--color-text-light);
+  box-shadow: 0 0 0 1px var(--color-primary), 0 0 0 4px var(--color-text-light);
+}
+
+.danger:focus-visible {
+  outline-color: var(--color-text-light);
+  box-shadow: 0 0 0 1px var(--color-danger), 0 0 0 4px var(--color-text-light);
+}
+
+.warning:focus-visible {
+  outline-color: var(--color-text-primary);
+  box-shadow: 0 0 0 1px var(--color-warning), 0 0 0 4px var(--color-text-primary);
+}
+
+.success:focus-visible {
+  outline-color: var(--color-text-light);
+  box-shadow: 0 0 0 1px var(--color-success), 0 0 0 4px var(--color-text-light);
+}
+
+/* Active states for better touch feedback */
+.button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .button {
+    min-height: var(--touch-target-min);
+    font-size: var(--font-size-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+  
+  .small {
+    min-height: 40px;
+    min-width: 70px;
+    font-size: var(--font-size-sm);
+  }
+  
+  .large {
+    min-height: 52px;
+    min-width: 120px;
+    font-size: var(--font-size-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .button {
+    min-height: var(--touch-target-min);
+    min-width: var(--button-min-width);
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-sm);
+  }
+  
+  .small {
+    min-height: 40px;
+    min-width: 60px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-xs);
+  }
+  
+  .large {
+    min-height: 48px;
+    min-width: 100px;
+    font-size: var(--font-size-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+  
+  .iconButton {
+    min-width: 40px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (orientation: landscape) and (max-height: 600px) {
+  .button {
+    min-height: 40px;
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  
+  .large {
+    min-height: 44px;
+    font-size: var(--font-size-md);
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .button {
+    /* Ensure adequate touch targets */
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+  }
+  
+  /* Remove hover effects on touch devices */
+  .primary:hover:not(:disabled),
+  .secondary:hover:not(:disabled),
+  .outline:hover:not(:disabled) {
+    background-color: var(--color-primary);
+    transform: none;
+  }
+  
+  /* Enhanced active feedback for touch */
+  .button:active:not(:disabled) {
+    transform: scale(0.92);
+    opacity: 0.8;
+    transition: all 0.1s ease-out;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .button {
+    border: 2px solid currentColor;
+  }
+  
+  .outline {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+  
+  .button:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .warning {
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .outline {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+[data-theme="dark"] .outline:hover:not(:disabled) {
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+}
