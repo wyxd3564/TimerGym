@@ -3,7 +3,7 @@ import CircularProgress from '../CircularProgress/CircularProgress';
 import TimeSettingModal from '../TimeSettingModal/TimeSettingModal';
 import Button from '../Button/Button';
 import { useTimer } from '../../hooks';
-import { formatTime, formatTimeWithMilliseconds, calculateProgress, getTimerColor, isDangerTime, isWarningTime } from '../../utils';
+import { formatTimeWithMilliseconds, calculateProgress, getTimerColor, isDangerTime, isWarningTime } from '../../utils';
 import { classNames } from '../../utils';
 import styles from './TimerDisplay.module.css';
 
@@ -25,7 +25,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = React.memo(({
   className = ''
 }) => {
   const [isTimeSettingOpen, setIsTimeSettingOpen] = useState(false);
-  const { incrementRepetitions, decrementRepetitions, resetRepetitions, resetTimer } = useTimer();
+  const { incrementRepetitions, decrementRepetitions, resetRepetitions } = useTimer();
 
   const handleTimeClick = useCallback(() => {
     // 타이머가 실행 중이 아닐 때만 시간 설정 가능
