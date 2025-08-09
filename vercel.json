@@ -5,14 +5,14 @@
       "src": "workout-timer/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist"
+        "distDir": "workout-timer/dist"
       }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/$1"
+      "dest": "/workout-timer/dist/index.html"
     }
   ]
 }
