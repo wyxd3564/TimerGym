@@ -4,6 +4,7 @@
         "npx *",
         "node *",
         "npm run build 2>&1 | Select-String -Pattern \"PWA|manifest|service\"",
-        "git *"
+        "git *",
+        "npm test -- --reporter=verbose \"TimerContext.mode|TimerContext.voiceCount|ModeSelector|VoiceCount\""
     ]
 }

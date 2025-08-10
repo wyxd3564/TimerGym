@@ -1,0 +1,126 @@
+### 목적
+이 규칙은 `workout-timer` React + TypeScript + Vite(PWA) 프로젝트를 더 원활하게 개발하기 위한 Cursor 보조 규칙입니다. 모든 편집/리팩터링/추가 기능은 아래 원칙을 반드시 준수합니다.
+
+### 기술 스택
+- **런타임/번들러**: Vite 7, React 19, TypeScript 5.8, vite-plugin-pwa
+- **테스트**: Vitest + React Testing Library (단위/통합), Playwright (E2E)
+- **배포**: Vercel 정적 빌드(`vercel.json`), 출력 디렉터리 `workout-timer/dist`
+- **경로 별칭**: `'@' -> '/src'`
+
+### 실행/빌드/테스트 명령
+```bash
+# 로컬 실행
+npm run dev
+
+# 타입 체크 + 빌드 (Vite 빌드 전 tsc -b)
+npm run build
+
+# 미리보기 서버 (E2E 기본 URL과 일치)
+npm run preview
+
+# 린트
+npm run lint
+
+# 단위/통합 테스트
+npm run test
+npm run test:watch
+npm run test:ui
+
+# E2E 테스트 (빌드+프리뷰 자동 수행)
+npm run test:e2e
+```
+
+### 프로젝트 구조(핵심)
+- `workout-timer/src/components/*`: UI 컴포넌트 (CSS Modules)
+- `workout-timer/src/contexts/*`: 전역 상태 컨텍스트 (`TimerContext`, `SettingsContext`, `TemplateContext`, `PWAContext`)
+- `workout-timer/src/hooks/*`: 접근성/키보드 내비게이션/설정/타이머 훅
+- `workout-timer/src/services/*`: 브라우저 기능 서비스 (`Timer`, `NotificationService`, `BackgroundSyncService`, `WakeLockService`, `VibrationService`, `VoiceCountService`, `IndexedDBService`, `PWAService` 등)
+- `workout-timer/src/types/index.ts`: `TimerState`, `TimerAction`, `TimerCallbacks`, `TIME_CONSTANTS` 등 타입/상수 정의
+- `workout-timer/src/styles/*`: 전역/반응형/변수 CSS
+- 테스트: `__tests__` 디렉터리와 `e2e/*`
+
+### 빌드/번들 최적화 수칙
+- `vite.config.ts`의 수동 청크 설정을 존중합니다.
+  - `vendor`: `['react', 'react-dom']`
+  - `settings`: `./src/components/Settings/Settings.tsx`
+  - `templates`: `./src/components/TimeTemplates/TimeTemplates.tsx`
+- 무거운 화면은 `React.lazy`로 분할 로딩합니다(`Settings`, `TimeTemplates`, `KeyboardShortcuts`).
+- PWA 설정(`VitePWA`)은 `registerType: 'autoUpdate'`, 폰트 캐시 전략 등을 유지/개선하되 파손 금지.
+
+### 타입/린트 규칙
+- TypeScript `strict: true`이며 `noUnusedLocals`, `noUnusedParameters` 활성화. 사용하지 않는 심볼이 생기지 않게 정리합니다.
+- ESLint 설정(`eslint.config.js`)을 준수합니다. 편집 후 `npm run lint`가 통과되어야 합니다.
+- 테스트 파일은 `tsconfig.app.json`에서 제외되어 있으므로 앱 빌드에 영향 없게 유지합니다.
+
+### 접근성/UX 가이드
+- `useScreenReader`, `useKeyboardNavigation` 훅을 적극 사용합니다.
+- 키보드 포커스/단축키(스페이스/화살표/숫자키) 동작을 유지합니다.
+- 모달/토글 등 인터랙션은 Escape로 닫힘, 한 번에 하나만 열림을 보장합니다.
+- 스크린 리더 안내(`announceTimerState`, `announceRepetitionChange`)가 기능 변경 후에도 의미 있게 유지되도록 합니다.
+- 테스트 선택자는 안정적인 `data-testid`를 사용하고 변경 시 테스트를 함께 갱신합니다.
+
+### 타이머/컨텍스트 규칙
+- `TimerContext` 리듀서 액션은 아래 의미를 준수합니다.
+  - `SET_MODE`: 모드 전환 시 타이머/스톱워치 상태 초기화 및 음성 카운트 OFF
+  - `START_TIMER`, `PAUSE_TIMER`, `RESET_TIMER`, `COMPLETE_TIMER`
+  - 반복 카운트: `INCREMENT_REPETITIONS`, `DECREMENT_REPETITIONS`, `RESET_REPETITIONS`
+  - 음성 카운트: `TOGGLE_VOICE_COUNT`, `INCREMENT_VOICE_COUNT`
+  - 진행 틱: `TICK`
+- `Timer` 서비스는 100ms 틱으로 동작하며 타이머 모드 카운트다운/스톱워치 모드 카운트업을 정확히 반영해야 합니다.
+- 완료/카운트다운 알림은 `NotificationService`를 통해 수행합니다.
+- 화면 꺼짐 방지는 `WakeLockService`와 설정(`settings.ui.keepScreenOn`) 연동을 유지합니다.
+
+### 데이터/브라우저 기능 사용 원칙
+- 로컬 저장/인덱스드DB/알림/진동/웨이크락/오디오/음성 인식은 반드시 해당 `Service` 레이어를 통해 사용합니다. 직접 DOM API 사용을 지양하고 서비스에 위임/확장합니다.
+- 서비스는 생성/파괴/가시성 핸들러 등 생명주기 관리가 명확해야 합니다.
+
+### 테스트 정책
+- 단위/통합 테스트(Vitest)와 E2E(Playwright)를 모두 통과해야 머지할 수 있습니다.
+- UI 구조가 바뀌면 관련 스냅샷/쿼리/역할/단축키 테스트를 업데이트합니다.
+- E2E는 `npm run preview`(`http://localhost:4173`)에 의존합니다. 서버 포트/경로 변경 금지(필요 시 설정과 테스트를 동기 수정).
+
+### 스타일/구현 가이드
+- 가독성을 최우선으로 하며, 명확한 네이밍(약어 지양), 가드 절, 얕은 중첩을 선호합니다.
+- CSS Modules(`*.module.css`) 네이밍 규칙을 따르고, 전역 스타일 오염을 방지합니다.
+- `vite.config.ts`의 CSS Modules 설정(`localsConvention: 'camelCase'`, `generateScopedName`)을 존중합니다.
+- 불필요한 `console`/`debugger`는 빌드 시 제거되며(terser 설정), 개발 시에도 최소화합니다.
+- 새 기능은 타입/테스트/문서(README 또는 주석)를 함께 제공합니다.
+
+### PWA/메타
+- `index.html`의 메타/아이콘/테마 컬러를 유지합니다.
+- `manifest`(`vite-plugin-pwa`)의 `name/short_name/description/lang/icons/screenshots`를 프로젝트 톤앤매너에 맞게 보존/확장합니다.
+
+### 변경 시 체크리스트
+- 기능/리팩터링 전:
+  - 영향 컨텍스트/서비스/훅 파악 (`src/contexts`, `src/services`, `src/hooks`)
+- 구현 중:
+  - 타입 추가/변경 시 `src/types/index.ts` 동기화
+  - 무거운 화면은 `React.lazy` 적용 및 `vite.config.ts` 청크 전략 유지
+  - 접근성/키보드/스크린리더 시나리오 확인
+- 구현 후:
+  - `npm run lint` / `npm run test` / `npm run test:e2e` 모두 통과
+  - 프리뷰에서 PWA 동작(아이콘/오프라인/업데이트) 확인
+
+### 보안/성능
+- 브라우저 권한(알림/오디오/웨이크락)은 사용자 상호작용 이후 초기화합니다.
+- 타이머/음성 등 장기 실행 리소스는 컴포넌트 unmount 시 정리합니다.
+- 메인 스레드 블로킹 로직 금지. 비동기 처리와 서비스 분리 유지.
+
+### 커뮤니케이션/스타일(도움말)
+- 모든 에이전트 응답은 한국어로 작성합니다.
+- 파일/디렉터리/함수/클래스 이름은 항상 백틱으로 감싸 명시합니다.
+- 필요할 때만 코드 블록을 사용하고, 과도한 포맷팅을 피합니다.
+
+### Cursor 보조 행동 규칙
+- 변경 전 관련 파일을 탐색해 컨텍스트를 확보합니다.
+- 논리 단위별 편집을 수행하고, 각 편집 후 빌드/테스트를 실행합니다.
+- 광범위 포맷팅/비관련 리팩터링 금지. 변경 최소화.
+- 요약은 간결하게, 변경된 파일/핵심 영향만 강조합니다.
+
+### 금지 사항
+- 수동 청크/지연 로딩 제거
+- 서비스 레이어 우회(직접 DOM/브라우저 API 남용)
+- 테스트/린트/타입 오류가 남은 상태로 제출
+
+### 메모
+- 배포는 `vercel.json`에 따라 정적 빌드 산출물(`workout-timer/dist`)을 사용합니다. 경로/출력 구조 변경 시 `vercel.json`과 라우팅을 함께 수정하십시오.

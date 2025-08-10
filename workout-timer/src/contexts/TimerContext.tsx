@@ -53,6 +53,8 @@ function timerReducer(state: TimerState, action: TimerAction): TimerState {
         elapsedTime: 0,
         isRunning: false,
         isPaused: false,
+        voiceCountActive: false,
+        voiceCountNumber: 0,
       };
 
     case 'START_TIMER':
@@ -134,7 +136,7 @@ function timerReducer(state: TimerState, action: TimerAction): TimerState {
       return {
         ...state,
         voiceCountActive: !state.voiceCountActive,
-        voiceCountNumber: !state.voiceCountActive ? 0 : state.voiceCountNumber,
+        voiceCountNumber: 0, // Always reset count when toggling
       };
 
     case 'INCREMENT_VOICE_COUNT':
@@ -392,15 +394,19 @@ export function TimerProvider({ children }: TimerProviderProps) {
   // 음성 카운트 토글 함수
   const toggleVoiceCount = useCallback(async () => {
     if (voiceCountServiceRef.current) {
-      // 사용자 상호작용 후 초기화
-      if (!voiceCountServiceRef.current.isAvailable()) {
-        await voiceCountServiceRef.current.initializeAfterUserInteraction();
-      }
-      
-      if (state.voiceCountActive) {
-        voiceCountServiceRef.current.stopVoiceCount();
-      } else {
-        voiceCountServiceRef.current.startVoiceCount();
+      try {
+        // 사용자 상호작용 후 초기화
+        if (!voiceCountServiceRef.current.isAvailable()) {
+          await voiceCountServiceRef.current.initializeAfterUserInteraction();
+        }
+        
+        if (state.voiceCountActive) {
+          voiceCountServiceRef.current.stopVoiceCount();
+        } else {
+          voiceCountServiceRef.current.startVoiceCount();
+        }
+      } catch (error) {
+        console.warn('Voice count service error:', error);
       }
       
       dispatch({ type: 'TOGGLE_VOICE_COUNT' });

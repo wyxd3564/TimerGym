@@ -204,78 +204,54 @@
 }
 
 /* 진행률 원 상태별 스타일 */
-.progressCircle.warning {
-  filter: drop-shadow(0 0 8px var(--color-timer-warning));
-}
+.progressCircle.warning { filter: none; }
+.progressCircle.danger { filter: none; animation: none; }
+.progressCircle.completed { filter: none; animation: none; }
 
-.progressCircle.danger {
-  filter: drop-shadow(0 0 12px var(--color-timer-danger));
-  animation: dangerGlow 0.5s ease-in-out infinite;
-}
-
-.progressCircle.completed {
-  filter: drop-shadow(0 0 16px var(--color-timer-danger));
-  animation: completedGlow 1s ease-in-out infinite;
-}
-
-@keyframes dangerGlow {
-  0%, 100% {
-    filter: drop-shadow(0 0 12px var(--color-timer-danger));
-  }
-  50% {
-    filter: drop-shadow(0 0 20px var(--color-timer-danger));
-  }
-}
-
-@keyframes completedGlow {
-  0%, 100% {
-    filter: drop-shadow(0 0 16px var(--color-timer-danger));
-  }
-  50% {
-    filter: drop-shadow(0 0 24px var(--color-timer-danger));
-  }
-}
+/* glow 애니메이션 제거로 키프레임 미사용 (보존) */
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .timeDisplay {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
   }
   
   .repetitionsNumber {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
   }
   
   .container {
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs);
   }
   
   .repetitionControls {
     gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
   }
   
   .repetitionButton {
-    width: 80px;
-    height: 80px;
-    min-width: 80px;
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
     font-size: var(--font-size-lg);
   }
   
   .resetButton {
-    width: 80px;
-    height: 80px;
-    min-width: 80px;
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
     font-size: var(--font-size-lg);
   }
 }
 
 @media (max-width: 480px) {
   .timeDisplay {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
   
   .repetitionsNumber {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
   
   .repetitionsLabel {
@@ -283,21 +259,26 @@
   }
   
   .container {
-    gap: var(--spacing-sm);
-    padding: var(--spacing-sm);
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+  }
+  
+  .repetitionControls {
+    margin-top: var(--spacing-xs);
+    gap: var(--spacing-xs);
   }
   
   .repetitionButton {
-    width: 72px;
-    height: 72px;
-    min-width: 72px;
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
     font-size: var(--font-size-md);
   }
   
   .resetButton {
-    width: 72px;
-    height: 72px;
-    min-width: 72px;
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
     font-size: var(--font-size-md);
   }
 }
@@ -323,23 +304,12 @@
   color: var(--color-primary);
 }
 
-.progressCircle.stopwatch {
-  filter: drop-shadow(0 0 8px var(--color-primary));
-}
+.progressCircle.stopwatch { filter: none; }
 
 /* 스톱워치 모드에서 진행률 바 애니메이션 */
-.progressCircle.stopwatch {
-  animation: stopwatchGlow 2s ease-in-out infinite;
-}
+.progressCircle.stopwatch { animation: none; }
 
-@keyframes stopwatchGlow {
-  0%, 100% {
-    filter: drop-shadow(0 0 8px var(--color-primary));
-  }
-  50% {
-    filter: drop-shadow(0 0 12px var(--color-primary));
-  }
-}
+/* 스톱워치 glow 애니메이션 제거 */
 
 /* 다크 테마 조정 */
 [data-theme="dark"] .repetitionsNumber {

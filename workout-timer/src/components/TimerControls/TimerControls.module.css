@@ -24,9 +24,9 @@
 }
 
 /* 반응형 디자인 */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .container {
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
   }
   
   .timerControls {
@@ -34,8 +34,50 @@
   }
   
   .controlButton {
-    max-width: 120px;
-    font-size: var(--font-size-md);
+    max-width: 100px;
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    gap: var(--spacing-xs);
+  }
+  
+  .timerControls {
+    gap: var(--spacing-xs);
+  }
+  
+  .controlButton {
+    max-width: 90px;
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+}
+
+@media (max-width: 360px) {
+  .controlButton {
+    max-width: 80px;
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-xs);
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (orientation: landscape) and (max-height: 600px) {
+  .container {
+    gap: var(--spacing-xs);
+  }
+  
+  .timerControls {
+    gap: var(--spacing-xs);
+  }
+  
+  .controlButton {
+    max-width: 80px;
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-xs);
   }
 }
 

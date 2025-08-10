@@ -61,8 +61,6 @@ const CircularProgress: React.FC<CircularProgressProps> = React.memo(({
           }}
           aria-hidden="true"
         />
-        
-
       </svg>
     </div>
   );

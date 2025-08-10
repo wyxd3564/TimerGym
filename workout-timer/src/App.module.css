@@ -27,6 +27,11 @@
   background-color: var(--color-bg-secondary);
 }
 
+.modeSelectorSection > * {
+  max-width: calc(300px * 1.5);
+  width: 100%;
+}
+
 .main {
   flex: 1;
   display: flex;
@@ -43,6 +48,7 @@
   justify-content: center;
   gap: var(--spacing-md);
   min-height: 60vh;
+  overflow: hidden;
 }
 
 .controlsSection {
@@ -117,66 +123,131 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .container {
+    min-height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+  
   .main {
     padding: var(--spacing-sm);
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
+    flex: 1;
+    overflow: hidden;
   }
   
   .timerSection {
-    gap: var(--spacing-sm);
-    min-height: 50vh;
+    gap: var(--spacing-xs);
+    min-height: auto;
+    flex: 1;
+    justify-content: space-evenly;
   }
   
   .controlsSection {
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
     padding-bottom: var(--spacing-sm);
+    flex-shrink: 0;
+  }
+  
+  .modeSelectorSection {
+    padding: var(--spacing-xs) var(--spacing-sm);
   }
 }
 
 @media (max-width: 480px) {
+  .container {
+    min-height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+  
   .main {
-    padding: var(--spacing-sm);
-    gap: var(--spacing-md);
+    padding: var(--spacing-xs);
+    gap: var(--spacing-xs);
+    flex: 1;
+    overflow: hidden;
   }
   
   .timerSection {
-    gap: var(--spacing-md);
-    min-height: 45vh;
+    gap: var(--spacing-xs);
+    min-height: auto;
+    flex: 1;
+    justify-content: space-evenly;
   }
   
   .controlsSection {
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
+    padding-bottom: var(--spacing-xs);
+    flex-shrink: 0;
+  }
+  
+  .modeSelectorSection {
+    padding: var(--spacing-xs);
   }
 }
 
 /* Landscape orientation adjustments */
 @media (orientation: landscape) and (max-height: 600px) {
+  .container {
+    max-height: 100vh;
+    overflow: hidden;
+  }
+  
   .timerSection {
-    min-height: 35vh;
-    gap: var(--spacing-sm);
+    min-height: auto;
+    gap: var(--spacing-xs);
+    flex: 1;
+    justify-content: space-evenly;
   }
   
   .main {
-    gap: var(--spacing-sm);
-    padding: var(--spacing-sm);
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+    flex: 1;
+    overflow: hidden;
   }
   
   .controlsSection {
-    gap: var(--spacing-sm);
-    padding-bottom: var(--spacing-sm);
+    gap: var(--spacing-xs);
+    padding-bottom: var(--spacing-xs);
+    flex-shrink: 0;
+  }
+  
+  .modeSelectorSection {
+    padding: var(--spacing-xs);
   }
 }
 
 /* Small mobile devices */
 @media (max-width: 360px) {
+  .container {
+    min-height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+  
   .main {
     padding: var(--spacing-xs);
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
+    flex: 1;
+    overflow: hidden;
   }
   
   .timerSection {
-    gap: var(--spacing-sm);
-    min-height: 45vh;
+    gap: var(--spacing-xs);
+    min-height: auto;
+    flex: 1;
+    justify-content: space-evenly;
+  }
+  
+  .controlsSection {
+    gap: var(--spacing-xs);
+    padding-bottom: var(--spacing-xs);
+    flex-shrink: 0;
+  }
+  
+  .modeSelectorSection {
+    padding: var(--spacing-xs);
   }
 }
 

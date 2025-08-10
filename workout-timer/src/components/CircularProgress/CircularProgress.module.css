@@ -25,9 +25,7 @@
 }
 
 /* 완료 시 펄스 애니메이션 */
-.progressCircle.completed {
-  animation: pulse 1s ease-in-out infinite;
-}
+.progressCircle.completed { animation: none; }
 
 @keyframes pulse {
   0% {
@@ -45,13 +43,9 @@
 }
 
 /* 마지막 10초 동안의 색상 변화 애니메이션 */
-.progressCircle.warning {
-  animation: colorPulse 1s ease-in-out infinite;
-}
+.progressCircle.warning { animation: none; }
 
-.progressCircle.danger {
-  animation: dangerPulse 0.5s ease-in-out infinite;
-}
+.progressCircle.danger { animation: none; }
 
 @keyframes colorPulse {
   0%, 100% {
@@ -76,8 +70,8 @@
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .container {
-    width: var(--timer-size);
-    height: var(--timer-size);
+    width: 200px;
+    height: 200px;
   }
   
   .progressCircle {
@@ -87,30 +81,38 @@
 
 @media (max-width: 640px) {
   .container {
-    width: 220px;
-    height: 220px;
+    width: 180px;
+    height: 180px;
   }
 }
 
 @media (max-width: 480px) {
   .container {
-    width: var(--timer-size);
-    height: var(--timer-size);
+    width: 160px;
+    height: 160px;
   }
 }
 
 @media (max-width: 360px) {
   .container {
-    width: 180px;
-    height: 180px;
+    width: 140px;
+    height: 140px;
   }
 }
 
 /* Landscape orientation adjustments */
 @media (orientation: landscape) and (max-height: 600px) {
   .container {
-    width: 160px;
-    height: 160px;
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* Very small screens in landscape */
+@media (orientation: landscape) and (max-height: 500px) {
+  .container {
+    width: 100px;
+    height: 100px;
   }
 }
 
