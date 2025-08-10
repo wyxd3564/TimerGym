@@ -1,63 +1,92 @@
-# 운동 타이머 앱 요구사항 명세서
+# Requirements Document
 
-## 개요 (Introduction)
+## Introduction
 
-본 문서는 간단하고 직관적인 운동 타이머 애플리케이션 개발을 위한 기능 및 비기능 요구사항을 정의합니다. 사용자는 이 앱을 통해 운동 시간을 설정하고, 시각적인 피드백(원형 그래프)과 알림을 통해 운동에 집중할 수 있습니다. 또한, 반복 횟수를 기록하고 미리 설정된 시간 템플릿을 사용하여 빠르게 운동을 시작할 수 있습니다.
+This document defines the functional and non-functional requirements for developing a simple and intuitive workout timer application. Users can set workout times, focus on their exercises through visual feedback (circular progress) and notifications, track repetition counts, and quickly start workouts using preset time templates.
 
-## 요구사항 (Requirements)
+## Requirements
 
-### Requirement 1: 타이머 설정 및 실행
+### Requirement 1: Mode Selection
 
-**User Story:** As a 사용자, I want to 원하는 시간을 설정하고 타이머를 시작/정지할 수 있다, so that 계획한 시간만큼 운동을 할 수 있다.
-
-#### Acceptance Criteria
-
-1. 시스템은 타이머 시간을 분:초 (MM:SS) 형식으로 화면 상단에 표시해야 한다.
-2. WHEN 타이머가 시작되면 THEN 시스템은 화면 중앙의 원형 그래프를 남은 시간에 비례하여 시각적으로 줄여나가야 한다.
-3. WHEN 사용자가 '시작' 버튼을 누르면 THEN 시스템은 타이머를 시작해야 한다.
-4. WHEN 타이머가 동작 중일 때 '정지' 버튼을 누르면 THEN 시스템은 타이머를 일시 정지해야 한다.
-5. WHEN 타이머가 정지된 상태에서 '초기화' 버튼을 누르면 THEN 시스템은 타이머와 원형 그래프를 원래 설정된 시간으로 되돌려야 한다.
-
-### Requirement 2: 반복 횟수 계산
-
-**User Story:** As a 사용자, I want to 운동 횟수를 기록할 수 있다, so that 내가 몇 번 반복했는지 쉽게 파악할 수 있다.
+**User Story:** As a user, I want to switch between timer and stopwatch modes, so that I can use the app for different types of workouts.
 
 #### Acceptance Criteria
 
-1. 시스템은 원형 그래프 내부에 현재 반복 횟수를 숫자로 표시해야 한다.
-2. WHEN 사용자가 '+' 버튼을 누르면 THEN 시스템은 반복 횟수를 1 증가시켜야 한다.
-3. WHEN 사용자가 '-' 버튼을 누르면 THEN 시스템은 반복 횟수를 1 감소시켜야 한다. 단, 횟수는 0 미만으로 내려갈 수 없다.
-4. WHEN '초기화' 버튼을 누르면 THEN 시스템은 반복 횟수를 0으로 초기화해야 한다.
+1. WHEN the app is displayed THEN the system SHALL show two mode buttons below the header: "타이머" and "스톱워치".
+2. WHEN the user presses the "타이머" button THEN the system SHALL switch to timer mode with countdown functionality.
+3. WHEN the user presses the "스톱워치" button THEN the system SHALL switch to stopwatch mode with count-up functionality.
+4. WHEN in timer mode THEN the system SHALL display time counting down from the set time to 00:00.
+5. WHEN in stopwatch mode THEN the system SHALL display time counting up from 00:00.
+6. WHEN switching modes THEN the system SHALL reset the current timer/stopwatch to initial state.
+7. WHEN the mode buttons are displayed THEN the system SHALL make them 1.5 times wider than standard buttons for better usability.
 
-### Requirement 3: 타이머 알림
+### Requirement 2: Timer Setup and Control
 
-**User Story:** As a 사용자, I want to 타이머 종료 시 소리와 진동으로 알림을 받고 싶다, so that 화면을 보지 않고도 운동 종료를 알 수 있다.
-
-#### Acceptance Criteria
-
-1. WHEN 타이머의 남은 시간이 3초, 2초, 1초일 때 THEN 시스템은 설정된 알림음('띵')을 각각 재생해야 한다.
-2. WHEN 타이머가 0초에 도달하면 THEN 시스템은 설정된 종료 알림음과 진동을 발생시켜야 한다.
-3. 사용자는 설정 화면에서 소리 알림과 진동 알림을 각각 켜거나 끌 수 있어야 한다.
-
-### Requirement 4: 시간 템플릿
-
-**User Story:** As a 사용자, I want to 미리 설정된 시간으로 타이머를 빠르게 시작하고 싶다, so that 매번 시간을 설정하는 번거로움을 줄일 수 있다.
+**User Story:** As a user, I want to set a desired time and start/stop the timer, so that I can exercise for the planned duration.
 
 #### Acceptance Criteria
 
-1. 시스템은 30초, 1분, 3분 기본 템플릿을 제공해야 한다.
-2. WHEN 사용자가 특정 시간 템플릿 버튼을 누르면 THEN 시스템은 타이머를 해당 시간으로 즉시 설정해야 한다.
-3. 사용자는 커스텀 템플릿을 생성할 수 있어야 한다 (이름과 시간 설정).
-4. 사용자는 자신이 만든 템플릿을 편집하거나 삭제할 수 있어야 한다.
-5. 기본 템플릿은 삭제할 수 없어야 한다.
+1. WHEN in timer mode THEN the system SHALL show the countdown time in MM:SS format at the top of the screen.
+2. WHEN in stopwatch mode THEN the system SHALL show the elapsed time in MM:SS format at the top of the screen.
+3. WHEN the timer starts in timer mode THEN the system SHALL visually increase the circular graph proportionally to the elapsed time (consistent UX with stopwatch).
+4. WHEN the timer starts in stopwatch mode THEN the system SHALL visually increase the circular graph proportionally to the elapsed time.
+5. WHEN the user presses the 'start' button THEN the system SHALL start the timer/stopwatch according to the current mode.
+6. WHEN the user presses the 'pause' button while running THEN the system SHALL pause the timer/stopwatch.
+7. WHEN the user presses the 'reset' button while paused THEN the system SHALL reset to the initial state according to the current mode.
 
-## 비기능 요구사항 (Non-functional Requirements)
+### Requirement 3: Voice Count Feature
 
-### NFR-1: 백그라운드 실행
-애플리케이션은 화면이 꺼지거나 백그라운드 상태로 전환되어도 타이머 기능을 중단 없이 계속 수행해야 한다.
+**User Story:** As a user, I want to activate voice counting with audio cues, so that I can count repetitions without looking at the screen.
 
-### NFR-2: 성능
-앱의 UI는 부드럽게 동작해야 하며, 버튼 클릭 및 화면 전환 시 0.2초 이내에 반응해야 한다.
+#### Acceptance Criteria
 
-### NFR-3: 호환성
-앱은 최신 버전의 iOS와 Android 운영체제에서 정상적으로 동작해야 한다.
+1. WHEN the circular timer is displayed THEN the system SHALL show a voice button in the center of the circle.
+2. WHEN the user presses the voice button THEN the system SHALL start playing a beep sound every 1 second.
+3. WHEN the voice counting is active THEN the system SHALL play two beep sounds first, then start voice counting "하나, 둘, 셋..." in Korean.
+4. WHEN the voice button is pressed again THEN the system SHALL stop the voice counting and beep sounds.
+5. WHEN voice counting reaches a number THEN the system SHALL continue incrementally ("하나, 둘, 셋, 넷, 다섯..." etc.).
+6. WHEN the voice counting is active THEN the system SHALL visually indicate the active state of the voice button.
+
+### Requirement 4: Repetition Count Tracking
+
+**User Story:** As a user, I want to track my exercise repetitions, so that I can easily monitor how many times I've repeated an exercise.
+
+#### Acceptance Criteria
+
+1. WHEN the timer is displayed THEN the system SHALL show the current repetition count as a number inside the circular graph.
+2. WHEN the user presses the '+' button THEN the system SHALL increase the repetition count by 1.
+3. WHEN the user presses the '-' button THEN the system SHALL decrease the repetition count by 1, but the count SHALL NOT go below 0.
+4. WHEN the 'reset' button is pressed THEN the system SHALL reset the repetition count to 0.
+
+### Requirement 5: Timer Notifications
+
+**User Story:** As a user, I want to receive sound and vibration alerts when the timer ends, so that I can know when my workout is complete without looking at the screen.
+
+#### Acceptance Criteria
+
+1. WHEN the timer has 3, 2, or 1 seconds remaining THEN the system SHALL play the configured countdown sound ('beep') for each second.
+2. WHEN the timer reaches 0 seconds THEN the system SHALL play the configured completion sound and trigger vibration.
+3. WHEN the user accesses settings THEN the system SHALL allow the user to enable or disable sound alerts and vibration alerts independently.
+
+### Requirement 6: Time Templates
+
+**User Story:** As a user, I want to quickly start the timer with preset times, so that I can reduce the hassle of setting time every time.
+
+#### Acceptance Criteria
+
+1. WHEN the system is initialized THEN the system SHALL provide default templates for 30 seconds, 1 minute, and 3 minutes.
+2. WHEN the user presses a specific time template button THEN the system SHALL immediately set the timer to that time.
+3. WHEN the user creates a custom template THEN the system SHALL allow setting both name and time duration.
+4. WHEN the user manages custom templates THEN the system SHALL allow editing or deleting user-created templates.
+5. WHEN the user attempts to delete default templates THEN the system SHALL prevent deletion of default templates.
+
+## Non-functional Requirements
+
+### NFR-1: Background Operation
+The application SHALL continue timer functionality without interruption when the screen is turned off or the app is moved to background state.
+
+### NFR-2: Performance
+The app UI SHALL operate smoothly and respond within 0.2 seconds for button clicks and screen transitions.
+
+### NFR-3: Compatibility
+The app SHALL function properly on the latest versions of iOS and Android operating systems.

@@ -106,6 +106,12 @@
   pointer-events: none;
 }
 
+/* 음성 카운트 버튼 */
+.voiceCountButton {
+  pointer-events: auto;
+  margin-top: var(--spacing-sm);
+}
+
 /* 반복 횟수 컨트롤 */
 .repetitionControls {
   display: flex;
@@ -312,6 +318,29 @@
   }
 }
 
+/* 스톱워치 모드 스타일 */
+.timeDisplay.stopwatch {
+  color: var(--color-primary);
+}
+
+.progressCircle.stopwatch {
+  filter: drop-shadow(0 0 8px var(--color-primary));
+}
+
+/* 스톱워치 모드에서 진행률 바 애니메이션 */
+.progressCircle.stopwatch {
+  animation: stopwatchGlow 2s ease-in-out infinite;
+}
+
+@keyframes stopwatchGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px var(--color-primary));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px var(--color-primary));
+  }
+}
+
 /* 다크 테마 조정 */
 [data-theme="dark"] .repetitionsNumber {
   color: var(--color-text-primary);
@@ -328,4 +357,23 @@
 
 [data-theme="dark"] .repetitionsNumber {
   color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .timeDisplay.stopwatch {
+  color: var(--color-primary-dark);
+}
+
+[data-theme="dark"] .progressCircle.stopwatch {
+  filter: drop-shadow(0 0 8px var(--color-primary-dark));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progressCircle.stopwatch {
+    animation: none;
+    filter: drop-shadow(0 0 8px var(--color-primary));
+  }
+  
+  [data-theme="dark"] .progressCircle.stopwatch {
+    filter: drop-shadow(0 0 8px var(--color-primary-dark));
+  }
 }

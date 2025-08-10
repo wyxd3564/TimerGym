@@ -6,12 +6,14 @@ import { Timer } from '../services/Timer';
 import { NotificationService } from '../services/NotificationService';
 import { BackgroundSyncService } from '../services/BackgroundSyncService';
 import { WakeLockService } from '../services/WakeLockService';
+import { VoiceCountService } from '../services/VoiceCountService';
 import { SettingsContext } from './SettingsContext';
 import { useScreenReader } from '../hooks/useScreenReader';
 
 interface TimerContextType {
   state: TimerState;
   dispatch: React.Dispatch<TimerAction>;
+  setMode: (mode: 'timer' | 'stopwatch') => void;
   startTimer: () => void;
   pauseTimer: () => void;
   resumeTimer: () => void;
@@ -20,22 +22,39 @@ interface TimerContextType {
   setDuration: (duration: number) => void;
   incrementRepetitions: () => void;
   decrementRepetitions: () => void;
+  toggleVoiceCount: () => void;
   notificationService: NotificationService;
+  voiceCountService: VoiceCountService;
   testNotification: (type: 'countdown' | 'completion') => Promise<void>;
 }
 
 export const TimerContext = createContext<TimerContextType | undefined>(undefined);
 
 const initialState: TimerState = {
+  mode: 'timer', // 기본 타이머 모드
   duration: 60, // 기본 1분 (초)
   remainingTime: 60000, // 기본 1분 (밀리초)
+  elapsedTime: 0, // 스톱워치 모드용 경과 시간 (밀리초)
   repetitions: 0,
   isRunning: false,
   isPaused: false,
+  voiceCountActive: false,
+  voiceCountNumber: 0,
 };
 
 function timerReducer(state: TimerState, action: TimerAction): TimerState {
   switch (action.type) {
+    case 'SET_MODE':
+      // 모드 전환 시 상태 초기화
+      return {
+        ...state,
+        mode: action.payload.mode,
+        remainingTime: state.duration * 1000,
+        elapsedTime: 0,
+        isRunning: false,
+        isPaused: false,
+      };
+
     case 'START_TIMER':
       return {
         ...state,
@@ -53,9 +72,12 @@ function timerReducer(state: TimerState, action: TimerAction): TimerState {
     case 'RESET_TIMER':
       return {
         ...state,
-        remainingTime: state.duration * 1000, // 초를 밀리초로 변환
+        remainingTime: state.mode === 'timer' ? state.duration * 1000 : state.remainingTime,
+        elapsedTime: state.mode === 'stopwatch' ? 0 : state.elapsedTime,
         isRunning: false,
         isPaused: false,
+        voiceCountActive: false,
+        voiceCountNumber: 0,
       };
 
     case 'RESET_REPETITIONS':
@@ -67,7 +89,8 @@ function timerReducer(state: TimerState, action: TimerAction): TimerState {
     case 'COMPLETE_TIMER':
       return {
         ...state,
-        remainingTime: state.duration * 1000, // 초를 밀리초로 변환
+        remainingTime: state.mode === 'timer' ? state.duration * 1000 : state.remainingTime,
+        elapsedTime: state.mode === 'stopwatch' ? 0 : state.elapsedTime,
         isRunning: false,
         isPaused: false,
         // repetitions는 그대로 유지 (자동 증가 제거)
@@ -95,9 +118,29 @@ function timerReducer(state: TimerState, action: TimerAction): TimerState {
       };
 
     case 'TICK':
+      if (state.mode === 'timer') {
+        return {
+          ...state,
+          remainingTime: action.payload?.remainingTime ?? state.remainingTime,
+        };
+      } else {
+        return {
+          ...state,
+          elapsedTime: action.payload?.elapsedTime ?? state.elapsedTime,
+        };
+      }
+
+    case 'TOGGLE_VOICE_COUNT':
       return {
         ...state,
-        remainingTime: action.payload?.remainingTime ?? state.remainingTime,
+        voiceCountActive: !state.voiceCountActive,
+        voiceCountNumber: !state.voiceCountActive ? 0 : state.voiceCountNumber,
+      };
+
+    case 'INCREMENT_VOICE_COUNT':
+      return {
+        ...state,
+        voiceCountNumber: state.voiceCountNumber + 1,
       };
 
     default:
@@ -115,18 +158,23 @@ export function TimerProvider({ children }: TimerProviderProps) {
   const notificationServiceRef = useRef<NotificationService | null>(null);
   const backgroundSyncRef = useRef<BackgroundSyncService | null>(null);
   const wakeLockServiceRef = useRef<WakeLockService | null>(null);
+  const voiceCountServiceRef = useRef<VoiceCountService | null>(null);
   const settingsContext = useContext(SettingsContext);
 
   // 스크린 리더 지원
   const { announceTimerState, announceRepetitionChange } = useScreenReader();
 
-  // NotificationService 초기화
+  // NotificationService 및 VoiceCountService 초기화
   useEffect(() => {
     notificationServiceRef.current = new NotificationService();
+    voiceCountServiceRef.current = new VoiceCountService();
 
     return () => {
       if (notificationServiceRef.current) {
         notificationServiceRef.current.destroy();
+      }
+      if (voiceCountServiceRef.current) {
+        voiceCountServiceRef.current.destroy();
       }
     };
   }, []);
@@ -202,12 +250,16 @@ export function TimerProvider({ children }: TimerProviderProps) {
   // Timer 서비스 초기화
   useEffect(() => {
     const callbacks: TimerCallbacks = {
-      onTick: (remainingTimeMs: number) => {
-        dispatch({ type: 'TICK', payload: { remainingTime: remainingTimeMs } });
+      onTick: (timeMs: number) => {
+        if (state.mode === 'timer') {
+          dispatch({ type: 'TICK', payload: { remainingTime: timeMs } });
+        } else {
+          dispatch({ type: 'TICK', payload: { elapsedTime: timeMs } });
+        }
       },
       onComplete: async () => {
-        // 완료 알림 실행
-        if (notificationServiceRef.current) {
+        // 완료 알림 실행 (타이머 모드에서만)
+        if (notificationServiceRef.current && state.mode === 'timer') {
           await notificationServiceRef.current.notifyCompletion();
         }
 
@@ -218,8 +270,8 @@ export function TimerProvider({ children }: TimerProviderProps) {
         announceTimerState(false, false, 0, state.repetitions);
       },
       onCountdown: async (seconds: number) => {
-        // 카운트다운 알림 실행
-        if (notificationServiceRef.current) {
+        // 카운트다운 알림 실행 (타이머 모드에서만)
+        if (notificationServiceRef.current && state.mode === 'timer') {
           await notificationServiceRef.current.notifyCountdown();
         }
         console.log(`Countdown: ${seconds} seconds remaining`);
@@ -233,7 +285,7 @@ export function TimerProvider({ children }: TimerProviderProps) {
         timerRef.current.destroy();
       }
     };
-  }, []);
+  }, [state.mode]);
 
   // 타이머 액션 함수들 (메모화)
   const startTimer = useCallback(async () => {
@@ -248,14 +300,15 @@ export function TimerProvider({ children }: TimerProviderProps) {
         timerRef.current.resume();
       } else {
         // 새로 시작
-        timerRef.current.start(state.duration);
+        timerRef.current.start(state.duration, state.mode);
       }
       dispatch({ type: 'START_TIMER' });
 
       // 스크린 리더 알림
-      announceTimerState(true, false, state.remainingTime, state.repetitions);
+      const currentTime = state.mode === 'timer' ? state.remainingTime : state.elapsedTime;
+      announceTimerState(true, false, currentTime, state.repetitions);
     }
-  }, [state.isRunning, state.isPaused, state.duration, state.remainingTime, state.repetitions, announceTimerState]);
+  }, [state.isRunning, state.isPaused, state.duration, state.mode, state.remainingTime, state.elapsedTime, state.repetitions, announceTimerState]);
 
   const pauseTimer = useCallback(() => {
     if (timerRef.current && state.isRunning) {
@@ -263,9 +316,10 @@ export function TimerProvider({ children }: TimerProviderProps) {
       dispatch({ type: 'PAUSE_TIMER' });
 
       // 스크린 리더 알림
-      announceTimerState(false, true, state.remainingTime, state.repetitions);
+      const currentTime = state.mode === 'timer' ? state.remainingTime : state.elapsedTime;
+      announceTimerState(false, true, currentTime, state.repetitions);
     }
-  }, [state.isRunning, state.remainingTime, state.repetitions, announceTimerState]);
+  }, [state.isRunning, state.mode, state.remainingTime, state.elapsedTime, state.repetitions, announceTimerState]);
 
   const resumeTimer = useCallback(() => {
     if (timerRef.current && state.isPaused) {
@@ -277,12 +331,19 @@ export function TimerProvider({ children }: TimerProviderProps) {
   const resetTimer = useCallback(() => {
     if (timerRef.current) {
       timerRef.current.reset();
+      
+      // 음성 카운트 중지
+      if (voiceCountServiceRef.current && state.voiceCountActive) {
+        voiceCountServiceRef.current.stopVoiceCount();
+      }
+      
       dispatch({ type: 'RESET_TIMER' });
 
       // 스크린 리더 알림 (카운터는 유지)
-      announceTimerState(false, false, state.duration, state.repetitions);
+      const resetTime = state.mode === 'timer' ? state.duration : 0;
+      announceTimerState(false, false, resetTime, state.repetitions);
     }
-  }, [state.duration, state.repetitions, announceTimerState]);
+  }, [state.mode, state.duration, state.repetitions, state.voiceCountActive, announceTimerState]);
 
   const resetRepetitions = useCallback(() => {
     dispatch({ type: 'RESET_REPETITIONS' });
@@ -314,6 +375,38 @@ export function TimerProvider({ children }: TimerProviderProps) {
     }
   }, [state.repetitions, announceRepetitionChange]);
 
+  // 모드 설정 함수
+  const setMode = useCallback((mode: 'timer' | 'stopwatch') => {
+    if (timerRef.current) {
+      timerRef.current.reset();
+    }
+    
+    // 음성 카운트 중지
+    if (voiceCountServiceRef.current && state.voiceCountActive) {
+      voiceCountServiceRef.current.stopVoiceCount();
+    }
+    
+    dispatch({ type: 'SET_MODE', payload: { mode } });
+  }, [state.voiceCountActive]);
+
+  // 음성 카운트 토글 함수
+  const toggleVoiceCount = useCallback(async () => {
+    if (voiceCountServiceRef.current) {
+      // 사용자 상호작용 후 초기화
+      if (!voiceCountServiceRef.current.isAvailable()) {
+        await voiceCountServiceRef.current.initializeAfterUserInteraction();
+      }
+      
+      if (state.voiceCountActive) {
+        voiceCountServiceRef.current.stopVoiceCount();
+      } else {
+        voiceCountServiceRef.current.startVoiceCount();
+      }
+      
+      dispatch({ type: 'TOGGLE_VOICE_COUNT' });
+    }
+  }, [state.voiceCountActive]);
+
   // 알림 테스트 함수 (설정 화면에서 사용)
   const testNotification = useCallback(async (type: 'countdown' | 'completion') => {
     if (notificationServiceRef.current) {
@@ -324,6 +417,7 @@ export function TimerProvider({ children }: TimerProviderProps) {
   const contextValue: TimerContextType = useMemo(() => ({
     state,
     dispatch,
+    setMode,
     startTimer,
     pauseTimer,
     resumeTimer,
@@ -332,11 +426,14 @@ export function TimerProvider({ children }: TimerProviderProps) {
     setDuration,
     incrementRepetitions,
     decrementRepetitions,
+    toggleVoiceCount,
     notificationService: notificationServiceRef.current!,
+    voiceCountService: voiceCountServiceRef.current!,
     testNotification,
   }), [
     state,
     dispatch,
+    setMode,
     startTimer,
     pauseTimer,
     resumeTimer,
@@ -345,6 +442,7 @@ export function TimerProvider({ children }: TimerProviderProps) {
     setDuration,
     incrementRepetitions,
     decrementRepetitions,
+    toggleVoiceCount,
     testNotification
   ]);
 

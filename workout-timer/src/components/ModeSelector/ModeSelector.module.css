@@ -1,0 +1,210 @@
+.modeSelector {
+  display: flex;
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xs);
+  gap: var(--spacing-xs);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  position: relative;
+  overflow: hidden;
+}
+
+.modeButton {
+  flex: 1;
+  padding: var(--spacing-sm) calc(var(--spacing-md) * 1.5);
+  border: none;
+  border-radius: var(--border-radius-md);
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  min-height: var(--touch-target-min);
+  min-width: calc(var(--touch-target-min) * 1.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Inactive button hover state */
+.modeButton:not(.active):hover {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Focus state for accessibility */
+.modeButton:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.modeButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Active press state */
+.modeButton:active {
+  transform: translateY(0px);
+  transition: transform 0.1s ease-in-out;
+}
+
+/* Active button styling */
+.modeButton.active {
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+  box-shadow: var(--shadow-md);
+  font-weight: var(--font-weight-semibold);
+  transform: translateY(-2px);
+}
+
+/* Active button hover state */
+.modeButton.active:hover {
+  background-color: var(--color-primary-dark);
+  color: var(--color-text-light);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Smooth transition animations */
+.modeButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: var(--border-radius-md);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+  z-index: -1;
+}
+
+.modeButton.active::before {
+  opacity: 1;
+}
+
+/* Ripple effect on click */
+.modeButton::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease-out, height 0.3s ease-out;
+  pointer-events: none;
+}
+
+.modeButton:active::after {
+  width: 100px;
+  height: 100px;
+}
+
+/* Enhanced dark theme support */
+[data-theme="dark"] .modeSelector {
+  background-color: var(--color-bg-dark);
+  border-color: var(--color-border-dark);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .modeButton {
+  color: var(--color-text-secondary);
+}
+
+[data-theme="dark"] .modeButton:not(.active):hover {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .modeButton.active {
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+}
+
+[data-theme="dark"] .modeButton.active:hover {
+  background-color: var(--color-primary-dark);
+}
+
+/* Enhanced responsive design */
+@media (max-width: 768px) {
+  .modeSelector {
+    padding: var(--spacing-xs);
+    gap: var(--spacing-xs);
+  }
+  
+  .modeButton {
+    padding: var(--spacing-sm) calc(var(--spacing-md) * 1.5);
+    font-size: var(--font-size-sm);
+    min-height: var(--touch-target-min);
+    min-width: calc(var(--touch-target-min) * 1.5);
+  }
+}
+
+@media (max-width: 480px) {
+  .modeSelector {
+    padding: calc(var(--spacing-xs) * 0.75);
+    gap: calc(var(--spacing-xs) * 0.75);
+  }
+  
+  .modeButton {
+    padding: var(--spacing-sm) calc(var(--spacing-md) * 1.2);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    min-width: calc(var(--touch-target-min) * 1.3);
+  }
+}
+
+/* Enhanced keyboard navigation */
+.modeSelector:focus-within {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary);
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .modeButton {
+    transition: none;
+  }
+  
+  .modeButton::before,
+  .modeButton::after {
+    transition: none;
+  }
+  
+  .modeButton:hover,
+  .modeButton.active {
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .modeSelector {
+    border-width: 2px;
+    border-color: var(--color-text-primary);
+  }
+  
+  .modeButton {
+    border: 1px solid transparent;
+  }
+  
+  .modeButton.active {
+    border-color: var(--color-text-light);
+  }
+  
+  .modeButton:focus {
+    outline-width: 3px;
+  }
+}

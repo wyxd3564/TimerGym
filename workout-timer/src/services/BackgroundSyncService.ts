@@ -3,11 +3,15 @@ import type { TimerState } from '../types';
 import { IndexedDBService } from './IndexedDBService';
 
 export interface BackgroundTimerState {
+  mode: 'timer' | 'stopwatch';
   duration: number;
   remainingTime: number;
+  elapsedTime: number;
   repetitions: number;
   isRunning: boolean;
   isPaused: boolean;
+  voiceCountActive: boolean;
+  voiceCountNumber: number;
   startTime: number; // 타이머 시작 시점의 timestamp
   lastUpdateTime: number; // 마지막 업데이트 시점의 timestamp
 }
@@ -91,11 +95,15 @@ export class BackgroundSyncService {
    */
   private async saveBackgroundState(timerState: TimerState): Promise<void> {
     const backgroundState: BackgroundTimerState = {
+      mode: timerState.mode,
       duration: timerState.duration,
       remainingTime: timerState.remainingTime,
+      elapsedTime: timerState.elapsedTime,
       repetitions: timerState.repetitions,
       isRunning: timerState.isRunning,
       isPaused: timerState.isPaused,
+      voiceCountActive: timerState.voiceCountActive,
+      voiceCountNumber: timerState.voiceCountNumber,
       startTime: Date.now() - (timerState.duration - timerState.remainingTime) * 1000,
       lastUpdateTime: Date.now()
     };
@@ -193,11 +201,15 @@ export class BackgroundSyncService {
     }
 
     return {
+      mode: backgroundState.mode || 'timer',
       duration: backgroundState.duration,
       remainingTime: Math.max(0, remainingTime),
+      elapsedTime: backgroundState.elapsedTime || 0,
       repetitions,
       isRunning,
-      isPaused
+      isPaused,
+      voiceCountActive: backgroundState.voiceCountActive || false,
+      voiceCountNumber: backgroundState.voiceCountNumber || 0
     };
   }
 
@@ -215,11 +227,15 @@ export class BackgroundSyncService {
         // 상태 업데이트
         backgroundState.lastUpdateTime = Date.now();
         await this.saveBackgroundState({
+          mode: backgroundState.mode || 'timer',
           duration: backgroundState.duration,
           remainingTime: backgroundState.remainingTime,
+          elapsedTime: backgroundState.elapsedTime || 0,
           repetitions: backgroundState.repetitions,
           isRunning: backgroundState.isRunning,
-          isPaused: backgroundState.isPaused
+          isPaused: backgroundState.isPaused,
+          voiceCountActive: backgroundState.voiceCountActive || false,
+          voiceCountNumber: backgroundState.voiceCountNumber || 0
         });
       }
     }, BackgroundSyncService.SYNC_INTERVAL);

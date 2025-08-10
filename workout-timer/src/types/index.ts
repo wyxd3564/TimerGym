@@ -1,11 +1,15 @@
 // Core Types for Workout Timer App
 
 export interface TimerState {
-  duration: number;        // 설정된 총 시간 (초)
-  remainingTime: number;   // 남은 시간 (밀리초)
+  mode: 'timer' | 'stopwatch';  // 타이머/스톱워치 모드
+  duration: number;        // 설정된 총 시간 (초) - 타이머 모드용
+  remainingTime: number;   // 남은 시간 (밀리초) - 타이머 모드용
+  elapsedTime: number;     // 경과 시간 (밀리초) - 스톱워치 모드용
   repetitions: number;     // 현재 반복 횟수
-  isRunning: boolean;      // 타이머 실행 상태
+  isRunning: boolean;      // 타이머/스톱워치 실행 상태
   isPaused: boolean;       // 일시정지 상태
+  voiceCountActive: boolean;     // 음성 카운트 활성 상태
+  voiceCountNumber: number;      // 현재 음성 카운트 숫자
 }
 
 export interface SettingsState {
@@ -40,6 +44,7 @@ export interface TemplateState {
 
 // Action Types
 export type TimerAction =
+  | { type: 'SET_MODE'; payload: { mode: 'timer' | 'stopwatch' } }
   | { type: 'START_TIMER' }
   | { type: 'PAUSE_TIMER' }
   | { type: 'RESET_TIMER' }
@@ -48,7 +53,9 @@ export type TimerAction =
   | { type: 'SET_DURATION'; payload: { duration: number } }
   | { type: 'INCREMENT_REPETITIONS' }
   | { type: 'DECREMENT_REPETITIONS' }
-  | { type: 'TICK'; payload?: { remainingTime: number } };
+  | { type: 'TICK'; payload?: { remainingTime?: number; elapsedTime?: number } }
+  | { type: 'TOGGLE_VOICE_COUNT' }
+  | { type: 'INCREMENT_VOICE_COUNT' };
 
 export type TemplateAction =
   | { type: 'ADD_TEMPLATE'; payload: { template: Omit<Template, 'id' | 'createdAt'> } }
@@ -94,7 +101,7 @@ export interface DragTimeInputProps {
 
 // Service Types
 export interface TimerCallbacks {
-  onTick: (remainingTime: number) => void;
+  onTick: (timeMs: number) => void; // remainingTime for timer mode, elapsedTime for stopwatch mode
   onComplete: () => void;
   onCountdown: (seconds: number) => void;
 }

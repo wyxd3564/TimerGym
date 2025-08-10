@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { TimerProvider, TemplateProvider, SettingsProvider, PWAProvider } from './contexts';
-import { Header, TimerDisplay, TimerControls, Modal } from './components';
-import { useSettings, useTimer, useKeyboardNavigation } from './hooks';
+import { Header, TimerDisplay, TimerControls, Modal, ModeSelector } from './components';
+import { useSettings, useKeyboardNavigation } from './hooks';
 import styles from './App.module.css';
 
 // Lazy load heavy components
@@ -68,7 +68,6 @@ class ErrorBoundary extends React.Component<
 // Main App Content
 const AppContent: React.FC = () => {
   const { settings } = useSettings();
-  const { state } = useTimer();
   const [showTemplates, setShowTemplates] = React.useState(false);
   const [showSettings, setShowSettings] = React.useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = React.useState(false);
@@ -134,15 +133,14 @@ const AppContent: React.FC = () => {
           onHelpClick={handleHelpClick}
         />
         
+        {/* Mode Selector - 상단바 아래에 위치 */}
+        <div className={styles.modeSelectorSection}>
+          <ModeSelector />
+        </div>
+        
         <main className={styles.main}>
           <div className={styles.timerSection}>
-            <TimerDisplay
-              remainingTime={state.remainingTime}
-              totalTime={state.duration}
-              repetitions={state.repetitions}
-              isRunning={state.isRunning}
-              isPaused={state.isPaused}
-            />
+            <TimerDisplay />
           </div>
           
           <div className={styles.controlsSection}>
