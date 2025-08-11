@@ -62,11 +62,13 @@
   }
 }
 
-/* 반응형 디자인 */
+/* 반응형 디자인 - 모바일에서 화면에 꽉 차도록 */
 @media (max-width: 768px) {
   .container {
-    width: 200px;
-    height: 200px;
+    width: min(85vw, 85vh);
+    height: min(85vw, 85vh);
+    max-width: 400px;
+    max-height: 400px;
   }
   
   .progressCircle {
@@ -76,46 +78,58 @@
 
 @media (max-width: 640px) {
   .container {
-    width: 180px;
-    height: 180px;
+    width: min(90vw, 80vh);
+    height: min(90vw, 80vh);
+    max-width: 350px;
+    max-height: 350px;
   }
 }
 
 @media (max-width: 480px) {
   .container {
-    width: 160px;
-    height: 160px;
+    width: min(92vw, 75vh);
+    height: min(92vw, 75vh);
+    max-width: 320px;
+    max-height: 320px;
   }
 }
 
 @media (max-width: 360px) {
   .container {
-    width: 140px;
-    height: 140px;
+    width: min(95vw, 70vh);
+    height: min(95vw, 70vh);
+    max-width: 280px;
+    max-height: 280px;
   }
 }
 
 /* Landscape orientation adjustments */
 @media (orientation: landscape) and (max-height: 600px) {
   .container {
-    width: 120px;
-    height: 120px;
+    width: min(60vw, 70vh);
+    height: min(60vw, 70vh);
+    max-width: 250px;
+    max-height: 250px;
   }
 }
 
 /* Very small screens in landscape */
 @media (orientation: landscape) and (max-height: 500px) {
   .container {
-    width: 100px;
-    height: 100px;
+    width: min(50vw, 65vh);
+    height: min(50vw, 65vh);
+    max-width: 200px;
+    max-height: 200px;
   }
 }
 
 /* Large screens */
 @media (min-width: 1024px) {
   .container {
-    width: 320px;
-    height: 320px;
+    width: min(400px, 50vw);
+    height: min(400px, 50vw);
+    max-width: 450px;
+    max-height: 450px;
   }
 }
 

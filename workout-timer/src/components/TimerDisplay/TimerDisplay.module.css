@@ -95,6 +95,8 @@
   max-width: 100%;
   /* 원형 그래프가 가능한 한 크게 보이도록 가용 공간 채우기 */
   margin: 0 auto;
+  flex: 1;
+  min-height: 0;
 }
 
 /* 중앙 반복 횟수 표시 */
@@ -118,13 +120,13 @@
 
 /* 반복 횟수 컨트롤 */
 .repetitionControls {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--spacing-md);
   margin-top: var(--spacing-sm);
   width: 100%;
+  max-width: 300px;
 }
 
 .repetitionButton {
@@ -231,6 +233,14 @@
     padding: var(--spacing-xs);
   }
   
+  .progressContainer {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+  }
+  
   .repetitionControls {
     gap: var(--spacing-sm);
     margin-top: var(--spacing-xs);
@@ -267,6 +277,14 @@
   .container {
     gap: var(--spacing-xs);
     padding: var(--spacing-xs);
+  }
+  
+  .progressContainer {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
   }
   
   .repetitionControls {
