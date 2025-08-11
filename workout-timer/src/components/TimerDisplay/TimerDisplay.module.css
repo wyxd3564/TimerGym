@@ -8,7 +8,7 @@
 
 /* 상단 시간 표시 */
 .timeDisplay {
-  font-size: var(--font-size-display);
+  font-size: clamp(1.75rem, 8vw, var(--font-size-display));
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   text-align: center;
@@ -91,6 +91,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  max-width: 100%;
 }
 
 /* 중앙 반복 횟수 표시 */
@@ -114,17 +116,19 @@
 
 /* 반복 횟수 컨트롤 */
 .repetitionControls {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   justify-content: center;
   gap: var(--spacing-md);
   margin-top: var(--spacing-sm);
+  width: 100%;
 }
 
 .repetitionButton {
-  width: calc(var(--touch-target-min) * 2);
-  height: calc(var(--touch-target-min) * 2);
-  min-width: calc(var(--touch-target-min) * 2);
+  width: clamp(48px, 20vw, calc(var(--touch-target-min) * 2));
+  height: clamp(48px, 20vw, calc(var(--touch-target-min) * 2));
+  min-width: clamp(48px, 20vw, calc(var(--touch-target-min) * 2));
   border-radius: var(--border-radius-full);
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
@@ -134,9 +138,9 @@
 }
 
 .resetButton {
-  width: calc(var(--touch-target-min) * 2);
-  height: calc(var(--touch-target-min) * 2);
-  min-width: calc(var(--touch-target-min) * 2);
+  width: clamp(48px, 20vw, calc(var(--touch-target-min) * 2));
+  height: clamp(48px, 20vw, calc(var(--touch-target-min) * 2));
+  min-width: clamp(48px, 20vw, calc(var(--touch-target-min) * 2));
   border-radius: var(--border-radius-full);
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);

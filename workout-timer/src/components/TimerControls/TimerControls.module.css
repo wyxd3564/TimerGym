@@ -3,25 +3,22 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
   width: 100%;
-  max-width: 400px;
+  max-width: none;
   margin: 0 auto;
 }
 
 /* 타이머 컨트롤 버튼들 */
 .timerControls {
   display: flex;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
   width: 100%;
   justify-content: center;
+  flex-wrap: nowrap;
 }
 
-.controlButton {
-  flex: 1;
-  max-width: 140px;
-  font-weight: var(--font-weight-bold);
-}
+.controlButton { flex: 1; font-weight: var(--font-weight-bold); min-width: 0; }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
@@ -50,7 +47,6 @@
   }
   
   .controlButton {
-    max-width: 90px;
     font-size: var(--font-size-sm);
     padding: var(--spacing-xs) var(--spacing-sm);
   }

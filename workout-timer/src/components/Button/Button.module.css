@@ -68,8 +68,8 @@
 }
 
 .large {
-  min-height: 56px;
-  min-width: 140px;
+  min-height: clamp(44px, 12svh, 56px);
+  min-width: clamp(100px, 40vw, 140px);
   padding: var(--spacing-md) var(--spacing-lg);
   font-size: var(--font-size-lg);
 }
