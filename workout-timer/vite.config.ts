@@ -75,8 +75,7 @@ export default defineConfig({
           vendor: ['react', 'react-dom'],
           // Settings chunk for settings-related components
           settings: ['./src/components/Settings/Settings.tsx'],
-          // Templates chunk for template-related components
-          templates: ['./src/components/TimeTemplates/TimeTemplates.tsx'],
+          // Templates chunk 제거
         }
       }
     },

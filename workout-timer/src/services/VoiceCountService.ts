@@ -1,214 +1,78 @@
 /**
- * VoiceCountService - 음성 카운트 기능을 제공하는 서비스
- * 1초 간격 삐 소리와 한국어 음성 카운트를 제공합니다.
+ * VoiceCountService - 음성 카운트 MP3 재생 서비스
+ * 버튼 토글 동작으로 count-ko.mp3를 재생/정지합니다.
  */
 export class VoiceCountService {
-  private audioContext: AudioContext | null = null;
-  private speechSynthesis: SpeechSynthesis | null = null;
-  private beepInterval: number | null = null;
-  private voiceInterval: number | null = null;
   private currentCount: number = 0;
   private isActive: boolean = false;
   private volume: number = 0.8;
-  private beepBuffer: AudioBuffer | null = null;
+  private mp3Audio: HTMLAudioElement | null = null;
+  private isMp3Playing: boolean = false;
 
-  constructor() {
-    this.initializeServices();
-  }
-
-  /**
-   * 오디오 컨텍스트와 음성 합성 초기화
-   */
-  private initializeServices(): void {
-    try {
-      // AudioContext 초기화
-      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-      if (AudioContextClass) {
-        this.audioContext = new AudioContextClass();
-        this.generateBeepSound();
-      } else {
-        console.warn('Web Audio API is not supported in this browser');
-      }
-
-      // SpeechSynthesis 초기화
-      if ('speechSynthesis' in window) {
-        this.speechSynthesis = window.speechSynthesis;
-      } else {
-        console.warn('SpeechSynthesis API is not supported in this browser');
-      }
-    } catch (error) {
-      console.error('Failed to initialize VoiceCountService:', error);
-    }
-  }
+  constructor() {}
 
   /**
-   * 삐 소리용 오디오 버퍼 생성
-   */
-  private async generateBeepSound(): Promise<void> {
-    if (!this.audioContext) return;
-
-    try {
-      await this.resumeAudioContext();
-      
-      const sampleRate = this.audioContext.sampleRate;
-      const duration = 0.1; // 100ms
-      const frequency = 1000; // 1000Hz
-      
-      const buffer = this.audioContext.createBuffer(1, sampleRate * duration, sampleRate);
-      const channelData = buffer.getChannelData(0);
-
-      for (let i = 0; i < channelData.length; i++) {
-        const t = i / sampleRate;
-        // 짧은 삐 소리 생성
-        const envelope = Math.exp(-t * 10); // 빠른 감쇠
-        channelData[i] = Math.sin(2 * Math.PI * frequency * t) * envelope * 0.3;
-      }
-
-      this.beepBuffer = buffer;
-    } catch (error) {
-      console.error('Failed to generate beep sound:', error);
-    }
-  }
-
-  /**
-   * AudioContext 재개 (사용자 상호작용 후 필요)
-   */
-  private async resumeAudioContext(): Promise<void> {
-    if (this.audioContext && this.audioContext.state === 'suspended') {
-      try {
-        await this.audioContext.resume();
-      } catch (error) {
-        console.error('Failed to resume AudioContext:', error);
-      }
-    }
-  }
-
-  /**
-   * 삐 소리 재생
-   */
-  private async playBeep(): Promise<void> {
-    if (!this.audioContext || !this.beepBuffer) return;
-
-    try {
-      await this.resumeAudioContext();
-      
-      const source = this.audioContext.createBufferSource();
-      const gainNode = this.audioContext.createGain();
-      
-      source.buffer = this.beepBuffer;
-      gainNode.gain.value = this.volume * 0.5; // 삐 소리는 조금 더 작게
-      
-      source.connect(gainNode);
-      gainNode.connect(this.audioContext.destination);
-      
-      source.start();
-    } catch (error) {
-      console.error('Failed to play beep:', error);
-    }
-  }
-
-  /**
-   * 숫자를 한국어로 변환
-   */
-  private getKoreanNumber(number: number): string {
-    const koreanNumbers = [
-      '', '하나', '둘', '셋', '넷', '다섯', '여섯', '일곱', '여덟', '아홉', '열',
-      '열하나', '열둘', '열셋', '열넷', '열다섯', '열여섯', '열일곱', '열여덟', '열아홉', '스물',
-      '스물하나', '스물둘', '스물셋', '스물넷', '스물다섯', '스물여섯', '스물일곱', '스물여덟', '스물아홉', '서른',
-      '서른하나', '서른둘', '서른셋', '서른넷', '서른다섯', '서른여섯', '서른일곱', '서른여덟', '서른아홉', '마흔',
-      '마흔하나', '마흔둘', '마흔셋', '마흔넷', '마흔다섯', '마흔여섯', '마흔일곱', '마흔여덟', '마흔아홉', '쉰'
-    ];
-
-    if (number >= 1 && number <= 50) {
-      return koreanNumbers[number];
-    }
-
-    // 50 이상의 경우 기본적인 변환 로직
-    if (number > 50 && number <= 99) {
-      const tens = Math.floor(number / 10);
-      const ones = number % 10;
-      const tensNames = ['', '', '스물', '서른', '마흔', '쉰', '예순', '일흔', '여든', '아흔'];
-      
-      if (ones === 0) {
-        return tensNames[tens];
-      } else {
-        return tensNames[tens] + koreanNumbers[ones];
-      }
-    }
-
-    // 100 이상은 숫자로 반환
-    return number.toString();
-  }
-
-  /**
-   * 음성으로 숫자 말하기
-   */
-  private speakNumber(number: number): void {
-    if (!this.speechSynthesis) return;
-
-    try {
-      // 기존 음성 중단
-      this.speechSynthesis.cancel();
-
-      const koreanText = this.getKoreanNumber(number);
-      const utterance = new SpeechSynthesisUtterance(koreanText);
-      
-      // 한국어 음성 설정
-      utterance.lang = 'ko-KR';
-      utterance.rate = 0.8; // 조금 느리게
-      utterance.pitch = 1.0;
-      utterance.volume = this.volume;
-
-      // 한국어 음성 찾기
-      const voices = this.speechSynthesis.getVoices();
-      const koreanVoice = voices.find(voice => 
-        voice.lang.startsWith('ko') || voice.name.includes('Korean')
-      );
-      
-      if (koreanVoice) {
-        utterance.voice = koreanVoice;
-      }
-
-      this.speechSynthesis.speak(utterance);
-    } catch (error) {
-      console.error('Failed to speak number:', error);
-    }
-  }
-
-  /**
-   * 음성 카운트 시작
+   * 음성 카운트 MP3 파일 재생 시작
+   * - 첫 클릭: 재생 시작
+   * - 다시 클릭: 정지 및 초기화
+   * - 재시작 시 항상 처음부터 재생
    */
   startVoiceCount(): void {
-    if (this.isActive) return;
-
+    // 상태 플래그
     this.isActive = true;
-    this.currentCount = 0;
 
-    // 즉시 첫 번째 삐 소리 재생
-    this.playBeep();
+    // 기존 인터벌/합성은 사용하지 않음
 
-    // 1초마다 삐 소리 재생
-    this.beepInterval = window.setInterval(() => {
-      if (!this.isActive) return;
-      this.playBeep();
-    }, 1000);
+    // MP3 재생 준비 및 시작
+    if (!this.mp3Audio) {
+      try {
+        // Vite 환경에서 정적 에셋 경로로 오디오 생성
+        this.mp3Audio = new Audio(new URL('../assets/sounds/count-ko.mp3', import.meta.url).href);
+        this.mp3Audio.preload = 'auto';
+      } catch (error) {
+        console.error('Failed to create audio element for count-ko.mp3', error);
+        return;
+      }
+    }
 
-    // 2초 후부터 음성 카운트 시작 (1초마다)
-    setTimeout(() => {
-      if (!this.isActive) return;
+    try {
+      this.mp3Audio.currentTime = 0; // 항상 처음부터
+      this.mp3Audio.volume = this.volume;
       
-      // 첫 번째 카운트 (하나)
-      this.currentCount = 1;
-      this.speakNumber(this.currentCount);
+      // 재생 시작
+      const playPromise = this.mp3Audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            this.isMp3Playing = true;
+          })
+          .catch((error) => {
+            console.error('Failed to play count-ko.mp3', error);
+            this.isActive = false;
+            this.isMp3Playing = false;
+          });
+      }
       
-      // 이후 1초마다 카운트 증가
-      this.voiceInterval = window.setInterval(() => {
-        if (!this.isActive) return;
-        
-        this.currentCount++;
-        this.speakNumber(this.currentCount);
-      }, 1000);
-    }, 2000);
+      // 재생이 끝나면 상태 초기화
+      this.mp3Audio.onended = () => {
+        this.isMp3Playing = false;
+        this.isActive = false;
+        this.currentCount = 0;
+      };
+      
+      // 에러 처리
+      this.mp3Audio.onerror = () => {
+        console.error('Audio playback error');
+        this.isMp3Playing = false;
+        this.isActive = false;
+        this.currentCount = 0;
+      };
+      
+    } catch (error) {
+      console.error('Failed to play count-ko.mp3', error);
+      this.isActive = false;
+      this.isMp3Playing = false;
+    }
   }
 
   /**
@@ -217,20 +81,17 @@ export class VoiceCountService {
   stopVoiceCount(): void {
     this.isActive = false;
 
-    // 인터벌 정리
-    if (this.beepInterval) {
-      clearInterval(this.beepInterval);
-      this.beepInterval = null;
-    }
+    // 인터벌/음성 합성 사용 안 함
 
-    if (this.voiceInterval) {
-      clearInterval(this.voiceInterval);
-      this.voiceInterval = null;
-    }
-
-    // 음성 합성 중단
-    if (this.speechSynthesis) {
-      this.speechSynthesis.cancel();
+    // MP3 재생 중지 및 초기화
+    if (this.mp3Audio) {
+      try {
+        this.mp3Audio.pause();
+        this.mp3Audio.currentTime = 0;
+      } catch (error) {
+        console.warn('Failed to stop audio playback', error);
+      }
+      this.isMp3Playing = false;
     }
 
     this.currentCount = 0;
@@ -238,9 +99,11 @@ export class VoiceCountService {
 
   /**
    * 음성 카운트 토글
+   * - 재생 중이면 정지 및 초기화
+   * - 정지 상태면 처음부터 재생
    */
   toggleVoiceCount(): void {
-    if (this.isActive) {
+    if (this.isActive || this.isMp3Playing) {
       this.stopVoiceCount();
     } else {
       this.startVoiceCount();
@@ -255,10 +118,10 @@ export class VoiceCountService {
   }
 
   /**
-   * 활성 상태 확인
+   * 활성 상태 확인 (재생 중인지 확인)
    */
   isVoiceCountActive(): boolean {
-    return this.isActive;
+    return this.isActive || this.isMp3Playing;
   }
 
   /**
@@ -279,18 +142,14 @@ export class VoiceCountService {
    * 서비스 사용 가능 여부 확인
    */
   isAvailable(): boolean {
-    return this.audioContext !== null && this.speechSynthesis !== null;
+    // HTMLAudioElement 사용 가능 여부 기준
+    return typeof Audio !== 'undefined';
   }
 
   /**
    * 사용자 상호작용 후 초기화 (브라우저 정책 준수)
    */
-  async initializeAfterUserInteraction(): Promise<void> {
-    await this.resumeAudioContext();
-    if (!this.beepBuffer) {
-      await this.generateBeepSound();
-    }
-  }
+  async initializeAfterUserInteraction(): Promise<void> { /* no-op */ }
 
   /**
    * 리소스 정리
@@ -298,12 +157,13 @@ export class VoiceCountService {
   destroy(): void {
     this.stopVoiceCount();
     
-    if (this.audioContext) {
-      this.audioContext.close();
-      this.audioContext = null;
+    // 오디오 컨텍스트/합성 사용 안 함
+    if (this.mp3Audio) {
+      try {
+        this.mp3Audio.pause();
+      } catch {}
+      this.mp3Audio.src = '';
+      this.mp3Audio = null;
     }
-    
-    this.speechSynthesis = null;
-    this.beepBuffer = null;
   }
 }

@@ -65,26 +65,7 @@ export const useKeyboardNavigation = (options: KeyboardNavigationOptions = {}) =
       }
     }
 
-    // 숫자 키로 빠른 템플릿 선택 (1: 30초, 2: 1분, 3: 3분)
-    if (enableNumberKeys && !state.isRunning) {
-      if (event.code === 'Digit1') {
-        event.preventDefault();
-        // 30초 설정 로직은 TemplateContext에서 처리
-        return;
-      }
-      
-      if (event.code === 'Digit2') {
-        event.preventDefault();
-        // 1분 설정 로직은 TemplateContext에서 처리
-        return;
-      }
-      
-      if (event.code === 'Digit3') {
-        event.preventDefault();
-        // 3분 설정 로직은 TemplateContext에서 처리
-        return;
-      }
-    }
+    // 숫자 키 단축키: 템플릿 기능 제거로 비활성화
 
     // R 키로 리셋
     if (event.code === 'KeyR' && !state.isRunning) {

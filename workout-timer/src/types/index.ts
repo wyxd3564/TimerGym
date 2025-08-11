@@ -28,19 +28,7 @@ export interface SettingsState {
   };
 }
 
-export interface Template {
-  id: string;
-  name: string;
-  duration: number; // 초 단위
-  isDefault: boolean;
-  createdAt: Date;
-}
 
-export interface TemplateState {
-  templates: Template[];
-  isLoading: boolean;
-  error: string | null;
-}
 
 // Action Types
 export type TimerAction =
@@ -57,14 +45,7 @@ export type TimerAction =
   | { type: 'TOGGLE_VOICE_COUNT' }
   | { type: 'INCREMENT_VOICE_COUNT' };
 
-export type TemplateAction =
-  | { type: 'ADD_TEMPLATE'; payload: { template: Omit<Template, 'id' | 'createdAt'> } }
-  | { type: 'UPDATE_TEMPLATE'; payload: { id: string; updates: Partial<Template> } }
-  | { type: 'DELETE_TEMPLATE'; payload: { id: string } }
-  | { type: 'LOAD_TEMPLATES' }
-  | { type: 'SET_TEMPLATES'; payload: { templates: Template[] } }
-  | { type: 'SET_LOADING'; payload: { isLoading: boolean } }
-  | { type: 'SET_ERROR'; payload: { error: string | null } };
+// 템플릿 기능 제거로 관련 타입 제거
 
 // Component Props Types
 export interface ButtonProps {
@@ -125,18 +106,7 @@ export interface DragState {
 }
 
 // Constants
-export const DEFAULT_TEMPLATES: Omit<Template, 'id' | 'createdAt'>[] = [
-  { name: '30초', duration: 30, isDefault: true },
-  { name: '1분', duration: 60, isDefault: true },
-  { name: '3분', duration: 180, isDefault: true }
-];
-
-// Default template IDs (for consistency)
-export const DEFAULT_TEMPLATE_IDS = {
-  THIRTY_SECONDS: 'default-30s',
-  ONE_MINUTE: 'default-1m',
-  THREE_MINUTES: 'default-3m'
-} as const;
+// DEFAULT_TEMPLATES 제거
 
 export const DEFAULT_SETTINGS: SettingsState = {
   sound: {
@@ -206,7 +176,6 @@ export const UI_CONSTANTS = {
 // Storage keys
 export const STORAGE_KEYS = {
   SETTINGS: 'workout-timer-settings',
-  TEMPLATES: 'workout-timer-templates',
   THEME: 'workout-timer-theme',
   TIMER_STATE: 'workout-timer-state'
 } as const;
@@ -243,11 +212,7 @@ export interface ValidationResult {
 }
 
 // Template form data
-export interface TemplateFormData {
-  name: string;
-  minutes: number;
-  seconds: number;
-}
+// TemplateFormData 제거
 
 // Settings form data
 export interface SettingsFormData {

@@ -111,33 +111,7 @@
   opacity: 1;
 }
 
-/* Enhanced active state indicator */
-.activeIndicator {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 20px;
-  height: 20px;
-  border-radius: var(--border-radius-full);
-  background: linear-gradient(135deg, var(--color-success), #20c997);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 
-    var(--shadow-sm),
-    0 0 0 2px var(--color-bg-primary);
-  z-index: 3;
-}
 
-/* Enhanced pulse animation */
-.pulse {
-  width: 10px;
-  height: 10px;
-  border-radius: var(--border-radius-full);
-  background: var(--color-text-light);
-  animation: enhancedPulse 1.2s ease-in-out infinite;
-  box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
-}
 
 /* Enhanced animations */
 @keyframes activeGlow {
@@ -155,18 +129,7 @@
   }
 }
 
-@keyframes enhancedPulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
-  }
-  50% {
-    opacity: 0.6;
-    transform: scale(0.7);
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-  }
-}
+
 
 /* Ripple effect animation */
 @keyframes ripple {
@@ -236,11 +199,7 @@
     0 0 45px rgba(74, 171, 247, 0.6);
 }
 
-[data-theme="dark"] .activeIndicator {
-  box-shadow: 
-    var(--shadow-md),
-    0 0 0 2px var(--color-bg-secondary);
-}
+
 
 /* Enhanced responsive design */
 @media (max-width: 768px) {
@@ -254,17 +213,7 @@
     height: 28px;
   }
   
-  .activeIndicator {
-    width: 16px;
-    height: 16px;
-    top: -4px;
-    right: -4px;
-  }
-  
-  .pulse {
-    width: 8px;
-    height: 8px;
-  }
+
   
   .voiceButton:active::before {
     width: 100px;
@@ -285,17 +234,7 @@
     height: 24px;
   }
   
-  .activeIndicator {
-    width: 14px;
-    height: 14px;
-    top: -3px;
-    right: -3px;
-  }
-  
-  .pulse {
-    width: 6px;
-    height: 6px;
-  }
+
   
   .voiceButton:active::before {
     width: 80px;
@@ -307,7 +246,6 @@
 @media (prefers-reduced-motion: reduce) {
   .voiceButton,
   .voiceButton.active,
-  .pulse,
   .icon,
   .waveform rect,
   .voiceButton::before {

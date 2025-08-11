@@ -1,11 +1,10 @@
 import React, { Suspense, lazy } from 'react';
-import { TimerProvider, TemplateProvider, SettingsProvider, PWAProvider } from './contexts';
+import { TimerProvider, SettingsProvider, PWAProvider } from './contexts';
 import { Header, TimerDisplay, TimerControls, Modal, ModeSelector } from './components';
 import { useSettings, useKeyboardNavigation } from './hooks';
 import styles from './App.module.css';
 
 // Lazy load heavy components
-const TimeTemplates = lazy(() => import('./components/TimeTemplates/TimeTemplates'));
 const Settings = lazy(() => import('./components/Settings/Settings'));
 const KeyboardShortcuts = lazy(() => import('./components/KeyboardShortcuts/KeyboardShortcuts'));
 
@@ -68,7 +67,7 @@ class ErrorBoundary extends React.Component<
 // Main App Content
 const AppContent: React.FC = () => {
   const { settings } = useSettings();
-  const [showTemplates, setShowTemplates] = React.useState(false);
+  // 템플릿 기능 제거
   const [showSettings, setShowSettings] = React.useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = React.useState(false);
 
@@ -88,9 +87,7 @@ const AppContent: React.FC = () => {
   React.useEffect(() => {
     const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        if (showTemplates) {
-          setShowTemplates(false);
-        } else if (showSettings) {
+        if (showSettings) {
           setShowSettings(false);
         } else if (showKeyboardShortcuts) {
           setShowKeyboardShortcuts(false);
@@ -103,23 +100,14 @@ const AppContent: React.FC = () => {
     return () => {
       document.removeEventListener('keydown', handleEscapeKey);
     };
-  }, [showTemplates, showSettings, showKeyboardShortcuts]);
-
-  // Ensure only one modal is open at a time
-  const handleTemplateClick = React.useCallback(() => {
-    setShowSettings(false);
-    setShowKeyboardShortcuts(false);
-    setShowTemplates(true);
-  }, []);
+  }, [showSettings, showKeyboardShortcuts]);
 
   const handleSettingsClick = React.useCallback(() => {
-    setShowTemplates(false);
     setShowKeyboardShortcuts(false);
     setShowSettings(true);
   }, []);
 
   const handleHelpClick = React.useCallback(() => {
-    setShowTemplates(false);
     setShowSettings(false);
     setShowKeyboardShortcuts(true);
   }, []);
@@ -127,11 +115,7 @@ const AppContent: React.FC = () => {
   return (
     <div className={styles.app}>
       <div className={styles.container} data-testid="app-container">
-        <Header
-          onTemplateClick={handleTemplateClick}
-          onSettingsClick={handleSettingsClick}
-          onHelpClick={handleHelpClick}
-        />
+        <Header onSettingsClick={handleSettingsClick} onHelpClick={handleHelpClick} />
         
         {/* Mode Selector - 상단바 아래에 위치 */}
         <div className={styles.modeSelectorSection}>
@@ -147,19 +131,6 @@ const AppContent: React.FC = () => {
             <TimerControls />
           </div>
         </main>
-
-        {/* Modals */}
-        <Modal
-          isOpen={showTemplates}
-          onClose={() => setShowTemplates(false)}
-          title="빠른 시작 선택"
-        >
-          <Suspense fallback={<LoadingSpinner />}>
-            <TimeTemplates 
-              onClose={() => setShowTemplates(false)} 
-            />
-          </Suspense>
-        </Modal>
 
         <Modal
           isOpen={showSettings}
@@ -192,13 +163,11 @@ function App() {
     <ErrorBoundary>
       <PWAProvider>
         <SettingsProvider>
-          <TemplateProvider>
-            <TimerProvider>
+          <TimerProvider>
               <Suspense fallback={<LoadingSpinner />}>
                 <AppContent />
               </Suspense>
             </TimerProvider>
-          </TemplateProvider>
         </SettingsProvider>
       </PWAProvider>
     </ErrorBoundary>

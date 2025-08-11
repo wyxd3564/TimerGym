@@ -93,6 +93,8 @@
   justify-content: center;
   width: 100%;
   max-width: 100%;
+  /* 원형 그래프가 가능한 한 크게 보이도록 가용 공간 채우기 */
+  margin: 0 auto;
 }
 
 /* 중앙 반복 횟수 표시 */

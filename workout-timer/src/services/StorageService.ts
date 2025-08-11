@@ -1,8 +1,8 @@
 // Storage Service - localStorage wrapper with error handling
-import type { Template, SettingsState } from '../types';
+import type { SettingsState } from '../types';
 
 export class StorageService {
-  private static readonly TEMPLATES_KEY = 'workout-timer-templates';
+  // 템플릿 키 제거
   private static readonly SETTINGS_KEY = 'workout-timer-settings';
 
   /**
@@ -59,15 +59,7 @@ export class StorageService {
     }
   }
 
-  // Template-specific methods
-  static saveTemplates(templates: Template[]): void {
-    this.setItem(this.TEMPLATES_KEY, templates);
-  }
-
-  static loadTemplates(): Template[] {
-    const templates = this.getItem<Template[]>(this.TEMPLATES_KEY);
-    return templates || [];
-  }
+  // 템플릿 관련 메서드 제거
 
   // Settings-specific methods
   static saveSettings(settings: SettingsState): void {

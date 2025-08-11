@@ -3,7 +3,6 @@ import { Button } from '../Button';
 import styles from './Header.module.css';
 
 export interface HeaderProps {
-  onTemplateClick: () => void;
   onSettingsClick: () => void;
   onHelpClick?: () => void;
   title?: string;
@@ -11,7 +10,6 @@ export interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({
-  onTemplateClick,
   onSettingsClick,
   onHelpClick,
   title = '운동 타이머',
@@ -19,18 +17,7 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   return (
     <header className={`${styles.header} ${className || ''}`}>
-      <div className={styles.leftSection}>
-        <Button
-          variant="outline"
-          size="small"
-          onClick={onTemplateClick}
-          aria-label="템플릿 선택"
-          className={styles.templateButton}
-          data-testid="templates-button"
-        >
-          템플릿
-        </Button>
-      </div>
+      <div className={styles.leftSection} />
       
       <div className={styles.centerSection}>
         <h1 className={styles.title}>{title}</h1>
