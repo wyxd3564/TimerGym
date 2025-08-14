@@ -24,54 +24,14 @@
   color: var(--color-text-secondary);
 }
 
-.inputContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-xs);
-}
-
-.timeInput {
-  width: 80px;
-  height: 60px;
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  text-align: center;
-  border: 2px solid var(--color-border);
-  border-radius: var(--border-radius-md);
-  background-color: var(--color-background-secondary);
-  color: var(--color-text-primary);
-  transition: all var(--transition-fast);
-}
-
-.timeInput:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.2);
-}
-
+.inputContainer {}
+.timeInput {}
+.timeInput:focus {}
 .timeInput::-webkit-outer-spin-button,
-.timeInput::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.timeInput[type=number] {
-  -moz-appearance: textfield;
-}
-
-.incrementButton,
-.decrementButton {
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
-  border-radius: var(--border-radius-full);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.timeInput::-webkit-inner-spin_button {}
+.timeInput[type=number] {}
+.incrementButton {}
+.decrementButton {}
 
 .separator {
   font-size: var(--font-size-2xl);
@@ -123,19 +83,9 @@
     gap: var(--spacing-sm);
   }
   
-  .timeInput {
-    width: 70px;
-    height: 50px;
-    font-size: var(--font-size-lg);
-  }
-  
-  .incrementButton,
-  .decrementButton {
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    font-size: var(--font-size-md);
-  }
+  .timeInput {}
+  .incrementButton {}
+  .decrementButton {}
   
   .separator {
     font-size: var(--font-size-xl);
@@ -170,11 +120,7 @@
     color: var(--color-text-secondary-dark, #cccccc);
   }
   
-  .timeInput {
-    background-color: var(--color-background-secondary-dark, #2a2a2a);
-    border-color: var(--color-border-dark, #404040);
-    color: var(--color-text-primary-dark, #ffffff);
-  }
+  .timeInput {}
   
   .preview {
     background-color: var(--color-background-secondary-dark, #2a2a2a);

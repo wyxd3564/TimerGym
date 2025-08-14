@@ -4,6 +4,7 @@ import Button from '../Button/Button';
 import Modal from '../Modal/Modal';
 import { formatTime } from '../../utils';
 import styles from './TimeSettingModal.module.css';
+import WheelPicker from '../WheelPicker/WheelPicker';
 
 interface TimeSettingModalProps {
   isOpen: boolean;
@@ -51,82 +52,43 @@ const TimeSettingModal: React.FC<TimeSettingModalProps> = ({ isOpen, onClose }) 
       title="시간 설정"
       className={styles.modal}
     >
+        {/* Enter 키로 확인 동작을 전역으로 지원 (테스트 및 키보드 접근성) */}
+        {isOpen && (
+          <KeydownEnterHandler onEnter={handleConfirm} />
+        )}
 
-        <div className={styles.timeInputs}>
+        <div className={styles.timeInputs} onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            handleConfirm();
+          }
+        }}>
           <div className={styles.inputGroup}>
-            <label htmlFor="minutes-input" className={styles.label}>
-              분
-            </label>
-            <div className={styles.inputContainer}>
-              <Button
-                variant="outline"
-                size="small"
-                onClick={() => handleMinutesChange(minutes + 1)}
-                aria-label="분 증가"
-                className={styles.incrementButton}
-              >
-                +
-              </Button>
-              <input
-                id="minutes-input"
-                type="number"
-                min="0"
-                max="59"
-                value={minutes}
-                onChange={(e) => handleMinutesChange(parseInt(e.target.value) || 0)}
-                className={styles.timeInput}
-                aria-label="분 입력"
-                data-testid="minutes-input"
-              />
-              <Button
-                variant="outline"
-                size="small"
-                onClick={() => handleMinutesChange(minutes - 1)}
-                aria-label="분 감소"
-                className={styles.decrementButton}
-              >
-                -
-              </Button>
-            </div>
+            <label htmlFor="minutes-input" className={styles.label}>분</label>
+            <WheelPicker
+              value={minutes}
+              min={0}
+              max={59}
+              step={1}
+              label="분"
+              onChange={handleMinutesChange}
+              inputId="minutes-input"
+            />
           </div>
 
           <div className={styles.separator}>:</div>
 
           <div className={styles.inputGroup}>
-            <label htmlFor="seconds-input" className={styles.label}>
-              초
-            </label>
-            <div className={styles.inputContainer}>
-              <Button
-                variant="outline"
-                size="small"
-                onClick={() => handleSecondsChange(seconds + 1)}
-                aria-label="초 증가"
-                className={styles.incrementButton}
-              >
-                +
-              </Button>
-              <input
-                id="seconds-input"
-                type="number"
-                min="0"
-                max="59"
-                value={seconds}
-                onChange={(e) => handleSecondsChange(parseInt(e.target.value) || 0)}
-                className={styles.timeInput}
-                aria-label="초 입력"
-                data-testid="seconds-input"
-              />
-              <Button
-                variant="outline"
-                size="small"
-                onClick={() => handleSecondsChange(seconds - 1)}
-                aria-label="초 감소"
-                className={styles.decrementButton}
-              >
-                -
-              </Button>
-            </div>
+            <label htmlFor="seconds-input" className={styles.label}>초</label>
+            <WheelPicker
+              value={seconds}
+              min={0}
+              max={59}
+              step={1}
+              label="초"
+              onChange={handleSecondsChange}
+              inputId="seconds-input"
+            />
           </div>
         </div>
 
@@ -160,3 +122,18 @@ const TimeSettingModal: React.FC<TimeSettingModalProps> = ({ isOpen, onClose }) 
 };
 
 export default TimeSettingModal;
+
+// 모달 열림 동안 Enter 키를 감지해 확인을 트리거하는 헬퍼 컴포넌트
+const KeydownEnterHandler: React.FC<{ onEnter: () => void }> = ({ onEnter }) => {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        onEnter();
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [onEnter]);
+  return null;
+};

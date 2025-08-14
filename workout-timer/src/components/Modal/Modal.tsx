@@ -113,9 +113,7 @@ const Modal: React.FC<ModalProps> = ({
     <div 
       className={styles.backdrop}
       onClick={handleBackdropClick}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby={title ? 'modal-title' : undefined}
+      role="presentation"
     >
       <div
         ref={modalRef}
@@ -123,6 +121,9 @@ const Modal: React.FC<ModalProps> = ({
         onClick={(e) => e.stopPropagation()}
         onKeyDown={handleKeyDown}
         tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? 'modal-title' : undefined}
       >
         {(title || showCloseButton) && (
           <div className={styles.header}>
