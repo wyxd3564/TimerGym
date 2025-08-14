@@ -6,7 +6,7 @@ import { Timer } from '../services/Timer';
 import { NotificationService } from '../services/NotificationService';
 import { BackgroundSyncService } from '../services/BackgroundSyncService';
 import { WakeLockService } from '../services/WakeLockService';
-import { VoiceCountService } from '../services/VoiceCountService';
+import type { VoiceCountService } from '../services/VoiceCountService';
 import { SettingsContext } from './SettingsContext';
 import { useScreenReader } from '../hooks/useScreenReader';
 
@@ -169,7 +169,16 @@ export function TimerProvider({ children }: TimerProviderProps) {
   // NotificationService 및 VoiceCountService 초기화
   useEffect(() => {
     notificationServiceRef.current = new NotificationService();
-    voiceCountServiceRef.current = new VoiceCountService();
+    // VoiceCountService는 동적 임포트로 로드하여 테스트 환경에서 정적 자산 해석 문제를 회피
+    (async () => {
+      try {
+        const module = await import('../services/VoiceCountService');
+        const ServiceCtor = module.VoiceCountService;
+        voiceCountServiceRef.current = new ServiceCtor();
+      } catch (error) {
+        console.warn('VoiceCountService failed to load:', error);
+      }
+    })();
 
     return () => {
       if (notificationServiceRef.current) {

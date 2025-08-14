@@ -99,6 +99,28 @@
   min-height: 0;
 }
 
+/* 중앙 원형 터치 블럭: 접근성과 시각적 일관성을 위해 완전 투명 클릭 타겟 */
+.centerTouch {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44%;
+  height: 44%;
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  /* 시각적 힌트는 포커스에서만 표시해 접근성 향상 */
+}
+
+.centerTouch:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 /* 중앙 반복 횟수 표시 */
 .repetitionsContainer {
   position: absolute;

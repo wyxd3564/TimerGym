@@ -176,6 +176,15 @@ const TimerDisplay: React.FC<TimerDisplayProps> = React.memo(({
           color={timerColor}
           className={progressClasses}
         />
+        {/* 중앙 원형 터치 블럭: 클릭 시 반복 횟수 증가. 음성 버튼 영역은 그대로 상단에 남아 포인터 이벤트를 우선 처리 */}
+        <button
+          type="button"
+          className={styles.centerTouch}
+          aria-label="중앙을 탭하여 반복 증가"
+          title="중앙을 탭하여 반복 증가"
+          onClick={incrementRepetitions}
+          data-testid="center-touch"
+        />
         
         {/* 중앙 반복 횟수 표시 */}
         <div 
