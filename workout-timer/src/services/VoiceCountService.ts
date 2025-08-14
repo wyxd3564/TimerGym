@@ -2,6 +2,7 @@
  * VoiceCountService - 음성 카운트 MP3 재생 서비스
  * 버튼 토글 동작으로 count-ko.mp3를 재생/정지합니다.
  */
+import countKoUrl from '../assets/count-ko.mp3?url';
 export class VoiceCountService {
   private currentCount: number = 0;
   private isActive: boolean = false;
@@ -26,8 +27,8 @@ export class VoiceCountService {
     // MP3 재생 준비 및 시작
     if (!this.mp3Audio) {
       try {
-        // Vite 환경에서 정적 에셋 경로로 오디오 생성
-        this.mp3Audio = new Audio(new URL('../assets/sounds/count-ko.mp3', import.meta.url).href);
+        // Vite 에셋 URL로 오디오 생성 (테스트/개발/빌드 환경 모두 안전)
+        this.mp3Audio = new Audio(countKoUrl);
         this.mp3Audio.preload = 'auto';
       } catch (error) {
         console.error('Failed to create audio element for count-ko.mp3', error);
